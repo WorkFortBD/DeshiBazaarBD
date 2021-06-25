@@ -98,7 +98,6 @@ const ProductDetailInfo = (props) => {
       img: cartProduct.productImage,
     };
   }
-  console.log("zoom img props => ", zoomImgProps);
 
   return (
     <>

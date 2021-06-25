@@ -467,9 +467,11 @@ a .custom-button-component:hover {
 }
 
 .product-card .product-card-body .product-title {
-  margin-top: 10px;
-  font-size: 18px;
+  margin-top: 7px;
+  font-size: 15px;
   font-weight: 600;
+  overflow: hidden;
+  height: 45px;
 }
 
 .product-card .product-card-body .rating {

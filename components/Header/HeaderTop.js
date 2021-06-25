@@ -16,9 +16,19 @@ const HeaderTop = () => {
                     </div>
                     <div className="col-md-7 heading-top-right">
                         <div className="row justify-content-end">
+                            
+                            <p className="heading-top-text pointer mr-3">
+                                <Link href="/register?type=seller">
+                                    <a href="" className="text-white">
+                                        <FontAwesomeIcon className="custom-fontAwesome" icon={faUser} /> Become a Seller
+                                    </a>
+                                </Link>
+                            </p>
+
                             <p className="heading-top-text pointer">
                                 <FontAwesomeIcon className="custom-fontAwesome" icon={faShippingFast} /> Track My Order
                             </p>
+
                             <p className="heading-top-text pointer">
                                 <Link href="/profile">
                                     <a href="/" className="text-white">

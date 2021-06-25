@@ -9,6 +9,7 @@ import { deleteCartItemAction, updateCartQtyAction } from "../_redux/CartProduct
 function FloatingCartProduct({ item }) {
   const dispatch = useDispatch();
   const [quantity, setQuantity] = useState(item.quantity);
+  
   const handleDeleteCartProduct = (productID) => {
     dispatch(deleteCartItemAction(productID))
   }

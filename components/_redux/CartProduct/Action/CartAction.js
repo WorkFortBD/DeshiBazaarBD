@@ -11,6 +11,7 @@ export const addToCartAction = (cartProduct, id) => async (dispatch) => {
     sellerName: cartProduct.sellerName,
     data: [cartProduct]
   }
+
   const filterCarts = carts.filter((item) => item.sellerName == cartProduct.sellerName);
   if (filterCarts.length > 0) {
     if (filterCarts[0].data.find((item) => item.productID === id)) {
@@ -57,7 +58,6 @@ export const updateCartQtyAction = (product_id, quantity) => async (dispatch) =>
     const getProductIndex = getData.combineCartList.indexOf(filterCarts[0]);
     filterCarts[0].quantity = quantity;
     data.combineCartList[getProductIndex] = filterCarts[0];
-    console.log('data.carts :>> ', data.combineCartList);
     // localStorage.setItem("carts", JSON.stringify(data.carts));
   }
 
@@ -82,6 +82,7 @@ export const updateCartQtyAction = (product_id, quantity) => async (dispatch) =>
 //delete cart product
 export const deleteCartItemAction = (product_id) => async (dispatch) => {
   const cartStorageData = localStorage.getItem("carts");
+
   let data = {
     carts: [],
     products: [],
@@ -115,6 +116,37 @@ function getCartData() {
   let data = {
     carts: [],
     products: [],
+    combineCartList: [],
+  };
+
+  if (typeof cartStorageData !== "undefined" && cartStorageData !== null) {
+    data.carts = JSON.parse(cartStorageData);
+    data.products = data.carts.products;
+
+    //combine carts data 
+    data.carts.map((item) => {
+      item.data.map((cartItem) => {
+        data.combineCartList.push(cartItem);
+      })
+    })
+  }
+  return data;
+}
+
+/**
+ * Get Vendor wise carts data
+ * 
+ * @since 1.0.0
+ * 
+ * @returns array combined carts item vendor wise
+ */
+function getVendorWiseCartData () {
+  // let cartsCombined     = [];
+  const cartStorageData =  localStorage.getItem("carts");
+
+  let data = {
+    carts          : [],
+    products       : [],
     combineCartList: [],
   };
 

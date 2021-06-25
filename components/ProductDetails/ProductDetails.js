@@ -67,10 +67,9 @@ const ProductDetails = ({ product }) => {
                 </h3>
               </Link>
               <div className="h3 product_price">
-                $
-                {product.default_selling_price && product.default_selling_price}
+                ৳ {product.default_selling_price && product.default_selling_price}
                 <span className="product_offerPrice">
-                  ${product.offer_selling_price && product.offer_selling_price}
+                  ৳{product.offer_selling_price && product.offer_selling_price}
                 </span>
               </div>
               <p className="product_description">
