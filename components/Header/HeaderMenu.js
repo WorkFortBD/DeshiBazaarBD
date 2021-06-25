@@ -31,7 +31,6 @@ const HeaderMenu = ({ toggleNav }) => {
    * return void
    */
   const clickMenuLink = ( categorySlug ) => {
-    console.log(`categorySlug`, categorySlug)
     router.push(`/products?category=${categorySlug}`);
   }
 
