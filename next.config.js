@@ -11,7 +11,7 @@
 
 module.exports = {
   images: {
-    domains: ['deshibazaarbd.com', 'api.deshibazaarbd.com',],
+    domains: ['deshibazaarbd.com', 'api.deshibazaarbd.com', 'deshibazaarbucket.s3.ap-southeast-1.amazonaws.com'],
   },
   webpack5: true,
   webpack(config) {
