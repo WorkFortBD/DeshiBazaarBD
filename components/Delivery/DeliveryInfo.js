@@ -22,28 +22,14 @@ const DeliveryInfo = ({fromAddressBook, closeModal = null}) => {
 
     const formik = useFormik({
         initialValues: {
-            name          : "",
-            phone_no      : "",
-            type          : "shipping_address",
-            country       : "Bangladesh",
-            country_id    : 19,
-            division      : "",
-            division_id   : "",
-            city          : "",
-            city_id       : "",
-            area          : "",
-            area_id       : "",
-            is_default    : 1, // integer
-            street1       : "",
-            street2       : "",
-            location      : "home", // home | office
-            same_address  : fromAddressBook ? false : true,
+            name           : "",
+            phone_no       : "",
+            street_address : "",
             user_id       : userData.id,
-            transaction_id: null
         },
         validationSchema: yup.object().shape({
-            name: yup.string().required('Required'),
-            phone_no:  yup.string().required('Required').test('phone_no', "required ex: 01712345678", (value) => {
+            name: yup.string().required('e.g John doe'),
+            phone_no:  yup.string().required('ex: 01712345678').test('phone_no', "e.g 01712345678", (value) => {
                 const phoneRegex = /^[0][1-9]\d{9}$|^[1-9]\d{9}$/;
 
                 let isValidPhone = phoneRegex.test(value);
@@ -51,13 +37,7 @@ const DeliveryInfo = ({fromAddressBook, closeModal = null}) => {
                 if(!isValidPhone) return false
                 return true
             }),
-            type: yup.string().required('Required'),
-            division: yup.string().required('Required'),
-            city: yup.string().required('Required'),
-            area: yup.string().required('Required'),
-            street1: yup.string().required('Required'),
-            street2: yup.string(),
-            location: yup.string().required('Required'),
+            street_address: yup.string().required('e.g House No 73, Road 14, Block F, Bashundhara R/A, Dhaka - 1216'),
         }),
         onSubmit: values => {
             const cloneVals = {...values};
@@ -101,7 +81,7 @@ const DeliveryInfo = ({fromAddressBook, closeModal = null}) => {
                                     name="name"
                                     type="text"
                                     className="custom_form_input"
-                                    placeholder="ex: John Doe"
+                                    placeholder=""
                                     onChange={formik.handleChange}
                                     onBlur={formik.handleBlur}
                                     value={formik.values.name}
@@ -124,7 +104,7 @@ const DeliveryInfo = ({fromAddressBook, closeModal = null}) => {
                                     name="phone_no"
                                     type="text"
                                     className="custom_form_input"
-                                    placeholder="ex: 01712345678"
+                                    placeholder=""
                                     onChange={formik.handleChange}
                                     onBlur={formik.handleBlur}
                                     value={formik.values.phone_no}
@@ -138,136 +118,18 @@ const DeliveryInfo = ({fromAddressBook, closeModal = null}) => {
                                 }
                             </div>
                         </div>
-
-                        <div className="col-lg-6">
+                        <div className="col-lg-12">
                             <div className="custome_form_group pb-3 mb-1 position-relative">
-                                <label className="form-label" htmlFor="address_type">Address Type</label>
-                                <CustomSelect
-                                    id="type"
-                                    name="type"
-                                    onChange={value=> formik.setFieldValue('type', value.value)}
-                                    value={formik.values.type}
-                                    options={options}
-                                />
-                            </div>
-                        </div>
-
-                        <div className="col-lg-6">
-                            <div className="custome_form_group pb-3 mb-1 position-relative">
-                                <label className="form-label required" htmlFor="division">Division</label>
-                                <CustomSelect
-                                    id="division"
-                                    name="division"
-                                    onChange={option => {
-                                        formik.setFieldValue('division', option.label);
-                                        formik.setFieldValue('division_id', option.value);
-                                        dispatch(getLocationData('cities', 'division', option.value));  
-                                    }}
-                                    value={formik.values.division}
-                                    options={divisionList}
-                                />
-                            </div>
-                        </div>
-
-                        <div className="col-lg-6">
-                            <div className="custome_form_group pb-3 mb-1 position-relative">
-                                <label className="form-label required" htmlFor="city">Zilla</label>
-                                    <CustomSelect
-                                        id="city"
-                                        name="city"
-                                        onChange={option => {
-                                            formik.setFieldValue('city', option.label);
-                                            formik.setFieldValue('city_id', option.value);
-                                            dispatch(getLocationData('areas', 'city', option.value));  
-                                        }}
-                                        value={formik.values.city}
-                                        options={cityList}
-                                    />
-                            </div>
-                        </div>
-
-                        <div className="col-lg-6">
-                            <div className="custome_form_group pb-3 mb-1 position-relative">
-                                <label className="form-label required" htmlFor="area">Upazilla</label>
-                                    <CustomSelect
-                                        id="area"
-                                        name="area"
-                                        onChange={option => {
-                                            formik.setFieldValue('area', option.label);
-                                            formik.setFieldValue('area_id', option.value);
-                                        }}
-                                        value={formik.values.area}
-                                        options={areaList}
-                                    />
-                            </div>
-                        </div>
-                        <div className="col-lg-6">
-                            <div className="custome_form_group pb-3 mb-1 position-relative">
-                                <label className="form-label required" htmlFor="location">Select a label for effective delivery</label>
-                                    <CustomSelect
-                                        id="location"
-                                        name="location"
-                                        onChange={option => {
-                                            formik.setFieldValue('location', option.value);
-                                        }}
-                                        value={formik.values.location}
-                                        options={[{label: 'Home', value: 'home'}, {label: 'Office', value: 'Office'}]}
-                                    />
-                            </div>
-                        </div>
-
-                        {
-                            !fromAddressBook && (
-                                <div className="col-lg-6 align-self-center">
-                                    <div className="custome_form_group pb-3 mb-1 position-relative">
-                                        <div className="d-flex align-items-center">
-                                            <input
-                                                style={{width: '10%'}}
-                                                id="same_address"
-                                                name="same_address"
-                                                type="checkbox"
-                                                className="custom_form_input"
-                                                onChange={formik.handleChange}
-                                                checked={formik.values.same_address}
-                                            />
-                                            <div>
-                                                <label className="form-label m-0" htmlFor="same_address">
-                                                    {
-                                                        `${formik.values.type === 'shipping_address' ? 'Bill' : 'Ship'} to the same address`
-                                                    }
-                                                </label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            )
-                        }
-
-
-                        <div className="col-lg-6 ">
-                            <div className="custome_form_group pb-3 mb-1 position-relative">
-                                <label className="form-label required" htmlFor="street1">Street-1</label>
-                                <textarea style={{resize: 'none'}} name="street1" id="street1" cols="30" rows="2" placeholder="Street-1" className="custom_form_input" onChange={formik.handleChange}
-                                onBlur={formik.handleBlur} value={formik.values.street1}>
+                                <label className="form-label required" htmlFor="street_address">Street Address</label>
+                                <textarea style={{resize: 'none'}} name="street_address" id="street_address" cols="30" rows="3" className="custom_form_input" onChange={formik.handleChange}
+                                onBlur={formik.handleBlur} value={formik.values.street_address}>
                                 </textarea>
-                                {
-                                    formik.errors.street1 && formik.touched.street1 && (
-                                        <ValidationError>
-                                            {formik.errors.street1}
-                                        </ValidationError>
-                                    )
-                                }
+                                <small className='street_address_warning'>
+                                    e.g House No 73, Road 14, Block F, Bashundhara R/A, Dhaka - 1216
+                                </small>
                             </div>
                         </div>
 
-                        <div className="col-lg-6 ">
-                            <div className="custome_form_group pb-3 mb-1 position-relative">
-                                <label className="form-label" htmlFor="street2">Street-2</label>
-                                <textarea style={{resize: 'none'}} name="street2" id="street2" cols="30" rows="2" placeholder="Street-2" className="custom_form_input" onChange={formik.handleChange}
-                                onBlur={formik.handleBlur} value={formik.values.street2}>
-                                </textarea>
-                            </div>
-                        </div>
                         <div className="col-lg-12 text-right">
                             <button type="submit" disabled={isLoadingAddress ? true : false} className="btn btn-success checkout_address_save_btn">
                                 Save

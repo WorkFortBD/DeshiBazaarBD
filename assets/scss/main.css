@@ -4142,3 +4142,12 @@ p.customer_info_edit {
     transform: scale(1.02);
   }
 }
+
+
+.street_address_warning {
+  opacity: 0;
+}
+
+#street_address:focus + .street_address_warning {
+  opacity: 1;
+}
