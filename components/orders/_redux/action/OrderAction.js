@@ -52,8 +52,16 @@ export const handleApplyCouponCode = (coupon, carts) => (dispatch) => {
     });
 };
 
-//handle change shipping cost =================================
-export const handleShippingCost = (carts) => (dispatch) => {
+/**
+ * Handle Get Shipping Cost.
+ *
+ * It will calculate the shipping cost based on cart and authenticated default shipping address.
+ *
+ * @param array carts
+ *
+ * @return void
+ */
+export const handleShippingCost = (carts = []) => (dispatch) => {
   let responseData = {
     status             : false,
     message            : "",
@@ -66,12 +74,14 @@ export const handleShippingCost = (carts) => (dispatch) => {
 
   const cartsData = localStorage.getItem('carts');
   const cart      = typeof cartsData !== 'undefined' && cartsData !== null ? JSON.parse(cartsData) : [];
-  
+
+  const filteredCart = cart.filter(item => item.isChecked)
+
   const shippingCost = {
-    carts: cart,
+    carts: filteredCart,
   };
 
-  Axios.post(`sales/shipping-cost/by-cart`, shippingCost)
+  Axios.post(`shipping/shipping-cost-by-cart`, shippingCost)
     .then((res) => {
       if (res.data.status) {
         let data                         = res.data;

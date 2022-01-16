@@ -6,7 +6,7 @@ import LoadingPlaceHolder from "../master/skelleton/LoadingPlaceholder";
 
 const StoreList = () => {
   const dispatch = useDispatch();
-  const { storeList, isLoading } = useSelector((state) => state.StoreReducer);
+  const { storeList, isLoading } = useSelector((state) => state.store);
 
   useEffect(() => {
     storeList.length === 0 && dispatch(getFilteredStoreList({}, 1));

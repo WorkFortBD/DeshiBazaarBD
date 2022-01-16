@@ -6,15 +6,15 @@ import Header from "../Header/Header";
 import FloatingCart from "../carts/floating-cart/FloatingCart";
 import FloatingCartButton from "../carts/floating-cart/FloatingCartButton";
 
-import { checkIsMobileDevice, isSignedIn } from "../../_redux/store/action/globalAction";
+import { checkIsMobileDevice, isSignedIn, setWelcomePopup } from "../../_redux/store/action/globalAction";
 
 // import DemoWarning from "../Demo/DemoWarning";
 // import MessengerCustomerChat from 'react-messenger-customer-chat';
 
 const MainLayout = ({children}) => {
   const dispatch = useDispatch();
-  const { backdrop, isSignedIn: alreadySignedIn } = useSelector(state => state.GlobalReducer);
-  const { userData } = useSelector(state => state.UserDataReducer)
+  const { backdrop, isSignedIn: alreadySignedIn, welcomePopup } = useSelector(state => state.global);
+  const { userData } = useSelector(state => state.user)
 
   useEffect(() => {
     const bodyDOM = window.document.body;
@@ -30,15 +30,24 @@ const MainLayout = ({children}) => {
   });
 
   useEffect(() => {
+
+    const timeout = setTimeout(() => {
+      if(!welcomePopup) {
+        dispatch(setWelcomePopup(true))
+      }
+    }, 2000);
+
     dispatch(isSignedIn(alreadySignedIn, userData))
     if (typeof window === "undefined") {
       global.window = {};
     }
-
+    
     if(process.browser) {
       const isMobile = /Android|webOS|iPhone|Opera Mini/i.test(navigator.userAgent);
       dispatch(checkIsMobileDevice(isMobile))
     }
+
+    return () => clearTimeout(timeout)
   }, [])
 
   return (

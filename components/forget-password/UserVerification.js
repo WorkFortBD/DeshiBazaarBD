@@ -2,13 +2,13 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/router";
 import { useSelector, useDispatch } from "react-redux";
-import ErrorMessage from "../master/ErrorMessage/ErrorMessage";
+import ErrorMessage from "../master/message/ErrorMessage";
 import SimpleBtn from "../master/SimpleBtn/SimpleBtn";
 import { validateOtp } from "./_redux/action/forget-password-action";
 
 function UserVerification() {
   const { email, isLoading, isOtpVerified } = useSelector(
-    (state) => state.ForgetPasswordReducer
+    (state) => state.authForgetPassword
   );
   const { register, handleSubmit, errors } = useForm();
   const dispatch = useDispatch();
@@ -46,7 +46,7 @@ function UserVerification() {
                       })}
                     />
                     {errors.email && errors.email.type === "required" && (
-                      <ErrorMessage errorText="Valid phone number or email is required" />
+                      <ErrorMessage message="Valid phone number or email is required" />
                     )}
                   </div>
                 </div>
@@ -70,7 +70,7 @@ function UserVerification() {
                       })}
                     />
                     {errors.otp && (
-                      <ErrorMessage errorText={errors.otp.message} />
+                      <ErrorMessage message={errors.otp.message} />
                     )}
                   </div>
                 </div>

@@ -6,15 +6,16 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   getCategoryRelatedBrands,
   setFilterParams,
-} from "./_redux/Action/CategoryWiseProductAction";
+} from "./_redux/action/CategoryAction";
 import ReactStars from "react-rating-stars-component";
 import { activeCurrency } from "../../services/currency";
+import { useRouter } from 'next/router';
+import { parseFilterString } from "../../helper/parse-filter-query";
 
 const ProductFilter = () => {
+  const router = useRouter();
   const dispatch = useDispatch();
-  const { filterParams, categories, brands } = useSelector(
-    (state) => state.CategoryWiseProductReducer
-  );
+  const { filterParams, categories, brands } = useSelector((state) => state.category);
 
   const [value, setValue] = useState({ min: 100, max: 90000 });
   const [isChecked, setIsChecked] = useState(false);
@@ -33,26 +34,48 @@ const ProductFilter = () => {
       }
     })
 
-    const filterParamClone = { ...filterParams };
-    filterParamClone.page = 1;
+    // remove brands check-box after changed category
+    brandCheckboxes.current.forEach(checkbox => {
+      if(checkbox?.checked !== undefined) {
+        checkbox.checked = false;
+      }
+    })
 
-    if(filterParamClone.type || filterParamClone.search || filterParamClone.seller_id) {
+    const filterParamClone = { ...filterParams };
+
+    if(router.query?.['type'] || router.query?.['search'] || router.query?.['seller_id']) {
       filterParamClone.brand = [];
       filterParamClone.category.push(category.short_code);
 
       if(!e.target.checked) {
         filterParamClone.category = [];
+        filterParamClone.brand = [];
+        
+        dispatch(getCategoryRelatedBrands(null));
+      }
+
+      if(e.target.checked) {
+        dispatch(getCategoryRelatedBrands(category.short_code));
       }
 
       dispatch(setFilterParams(filterParamClone));
-      dispatch(getCategoryRelatedBrands(category.short_code));
-      return;
+    }
+
+    const cloneQueries = {...router.query};
+    if(cloneQueries?.category) {
+      delete cloneQueries.brand;
     }
 
     if (e.target.checked) {
       filterParamClone.category[1] = category.short_code;
+      router.replace({
+        query: parseFilterString(cloneQueries, {category: category.short_code})
+      })
     } else {
-      filterParamClone.category.splice(1, 1)
+      router.replace({
+        query: parseFilterString(cloneQueries, {category: cloneQueries?.['category'] || ""})
+      });
+      filterParamClone.category.splice(1, 1);
     }
     
     dispatch(setFilterParams(filterParamClone));
@@ -67,12 +90,34 @@ const ProductFilter = () => {
 
     if (e.target.checked) {
       filterParamClone.brand.push(brand.slug);
+
+      router.replace({
+        query: {
+          ...router.query,
+          brand: router.query.brand ? router.query.brand + ',' + brand.slug : brand.slug
+        }
+      })
     } else {
       const updatedCategory = filterParamClone.brand.filter(
         (item) => item !== brand.slug
-      );
+      ) || [];
+
       filterParamClone.brand = updatedCategory;
+      
+      // const cloneQuery = {...router.query};
+
+      // if(router.query['brand'] === brand.slug) {
+      //   delete cloneQuery.brand
+      // }
+
+      router.replace({
+        query: {
+          ...router.query,
+          brand: updatedCategory.join(',')
+        }
+      })
     }
+
     dispatch(setFilterParams(filterParamClone));
   };
 
@@ -91,10 +136,9 @@ const ProductFilter = () => {
 
   const debounceReturn = useCallback(
     debounce((newValue, filterParams) => {
-      const filterParamClone = { ...filterParams };
-      filterParamClone.min_price = newValue.min;
-      filterParamClone.max_price = newValue.max;
-      dispatch(setFilterParams(filterParamClone));
+      router.replace({
+        query: parseFilterString(router.query, {max_price: newValue.max, min_price: newValue.min})
+      })
     }, 500),
     []
   );
@@ -112,17 +156,18 @@ const ProductFilter = () => {
     color: "#ddd",
     activeColor: '#ffd700',
     onChange: (newValue) => {
-      const filterParamClone = { ...filterParams };
-      filterParamClone.rating = newValue;
-      dispatch(setFilterParams(filterParamClone));
+      router.replace({
+        query: parseFilterString(router.query, {rating: newValue})
+      })
     },
   };
   
   const resetRatingHandler = () => {
-    const filterParamClone = { ...filterParams };
-    filterParamClone.rating = null;
+    router.replace({
+      query: parseFilterString(router.query, {rating: ""})
+    })
 
-    dispatch(setFilterParams(filterParamClone));
+    // dispatch(setFilterParams(filterParamClone));
   }
 
   useEffect(() => {

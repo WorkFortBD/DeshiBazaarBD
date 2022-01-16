@@ -7,7 +7,7 @@ import { getMenuListData } from "./_redux/HeaderAction/HeaderAction";
 import Translate from "../translation/Translate";
 
 const HeaderMenu = ({ navigationToggleHandler, showToolbar }) => {
-  const { menuList } = useSelector((state) => state.HeaderReducer);
+  const { menuList } = useSelector((state) => state.header);
   const router = useRouter();
   const dispatch = useDispatch();
 
@@ -45,12 +45,21 @@ const HeaderMenu = ({ navigationToggleHandler, showToolbar }) => {
    * return void
    */
 
-  const clickMenuLink = (category, toggleBackdrop) => {
+  const clickMenuLink = (category, toggleBackdrop, isMainCategory = false) => {
+    let categoryType = "";
+
+    if(isMainCategory && category.short_code === 'groceries') {
+      categoryType =  'main-category';
+    } else {
+      categoryType = 'category';
+    }
+
     if(toggleBackdrop) {
       navigationToggleHandler();
     }
+
     router
-      .push(`/products?category=${encodeURIComponent(category.short_code)}&name=${encodeURIComponent(category.name)}`)
+      .push(`/products?${categoryType}=${encodeURIComponent(category.short_code)}&name=${encodeURIComponent(category.name)}&filter=paginate_no__40`)
       .then((_) => window.scrollTo(0, 0)); // added "name" query param only for collect category name from url on product page
   };
 
@@ -90,7 +99,7 @@ const HeaderMenu = ({ navigationToggleHandler, showToolbar }) => {
                 }`}
               >
                 <span
-                  onClick={() => clickMenuLink(itemLvl1, false)}
+                  onClick={() => clickMenuLink(itemLvl1, false, true)}
                   className="navigation__nav-link"
                 >
                   <Translate>{itemLvl1.name}</Translate>
@@ -161,7 +170,7 @@ const HeaderMenu = ({ navigationToggleHandler, showToolbar }) => {
                   ></span>
                 )}
                 <span
-                  onClick={() => clickMenuLink(itemLvl1, true)}
+                  onClick={() => clickMenuLink(itemLvl1, true, true)}
                   className="navigation-mobile__nav-link"
                   href="#"
                 >

@@ -80,7 +80,7 @@ export function activeLang ( printableLabel = '' ) {
 export function formatCurrency (amount, thousandSeparator = true, prefix = activeCurrency('sign')) {
     var CurrencyFormat = require('react-currency-format');
 
-    amount = isNumeric(amount) ? parseFloat(amount) : 0;
+    amount = Math.floor(isNumeric(amount)) ? Math.floor(parseFloat(amount)) : 0;
 
     return <CurrencyFormat value={amount} displayType={'text'} thousandSeparator={thousandSeparator} prefix={prefix} />;
 }

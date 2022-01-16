@@ -15,9 +15,9 @@ import Profile from '../../../public/images/navigation/profile.svg';
 const FloatingCartButton = () => {
     const router = useRouter();
     const dispatch = useDispatch();
-    const { totalQuantity, totalPrice } = useSelector(state => state.CartReducer);
-    const { wishList } = useSelector((state) => state.WishlistReducer);
-    // const { isMobile } = useSelector(state => state.GlobalReducer);
+    const { totalQuantity, totalPrice } = useSelector(state => state.cart);
+    const { wishList } = useSelector((state) => state.wishlist);
+    // const { isMobile } = useSelector(state => state.global);
 
     const flashDealBtnHandler = () => {
         dispatch(toggleFloatingCart());

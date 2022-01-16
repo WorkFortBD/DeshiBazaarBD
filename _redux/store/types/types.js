@@ -6,3 +6,5 @@ export const GET_DEVICE_INFO = "GET_DEVICE_INFO";
 export const TOGGLE_BACKDROP = "TOGGLE_BACKDROP";
 
 export const IS_SIGNED_IN = "IS_SIGNED_IN";
+
+export const SET_WELCOME_POPUP = "SET_WELCOME_POPUP";

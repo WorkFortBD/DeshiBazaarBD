@@ -10,8 +10,8 @@ import {
 import { showToast } from "../master/Helper/ToastHelper";
 import router from "next/router";
 import { toggleProductModalAction } from "./_redux/Action/ProductAction";
-import LoadingSpinner from "../master/LoadingSpinner/LoadingSpinner";
-import { activeCurrency, formatCurrency } from "../../services/currency";
+import LoadingSpinner from "../master/loading/LoadingSpinner";
+import { formatCurrency } from "../../services/currency";
 import SimpleBtn from "../master/SimpleBtn/SimpleBtn";
 import Translate from "../translation/Translate";
 
@@ -19,8 +19,8 @@ const ProductSingleFull = ({ product }) => {
   const dispatch = useDispatch();
   const [quantity, setQuantity] = useState(1);
   const [previewImg, setPreviewImg] = useState(null);
-  const { carts } = useSelector((state) => state.CartReducer);
-  const {isSignedIn} = useSelector(state => state.GlobalReducer)
+  const { carts } = useSelector((state) => state.cart);
+  const {isSignedIn} = useSelector(state => state.global)
   const [filterCarts, setFilterCarts] = useState(null);
   const [updatedID, setUpdatedID] = useState(null);
 

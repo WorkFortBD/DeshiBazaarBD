@@ -79,11 +79,12 @@ const initialState = {
         location      : ""
     },
     countryList         : [],
-    divisionList        : [],           
+    divisionList        : [],
     cityList            : [],
     areaList            : [],
     userDetails         : null,
 }
+
 function ProfileAccountSettingReducer(state = initialState, action) {
     switch (action.type) {
         case Types.GET_SHIPPING_ADDRESS:
@@ -105,7 +106,6 @@ function ProfileAccountSettingReducer(state = initialState, action) {
                 defaultShippingAddress: action.payload.data,
                 // shippingAddressInput: initialState.shippingAddressInput,
             }
-           
         case Types.GET_DEFAULT_BILLING_ADDRESS:
             return {
                 ...state,
@@ -246,7 +246,7 @@ function ProfileAccountSettingReducer(state = initialState, action) {
                         location           : cloneAddress[0].location
                     }
                 }
-                
+
                 return {
                     ...state,
                     selectedAddress: cloneSelectedAddress
@@ -270,7 +270,7 @@ function ProfileAccountSettingReducer(state = initialState, action) {
                     cityList: [],
                     areaList: []
                 }
-              
+
         default:
             break;
     }

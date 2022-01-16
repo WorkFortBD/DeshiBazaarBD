@@ -4,7 +4,7 @@ import ProductNoFound from "../master/productNoFound/ProductNoFound";
 import ProductSingleMini from "../products/ProductSingleMini";
 
 const CategoryWiseMiniProduct = ({ columns }) => {
-  const { products } = useSelector((state) => state.CategoryWiseProductReducer);
+  const { products } = useSelector((state) => state.category);
   const [cardClassName, setCardClassName] = useState('product-card categories_wise_product_card shadow-sm mb-sm-2 mb-md-3 bg-white rounded');
 
   // useEffect(() => {

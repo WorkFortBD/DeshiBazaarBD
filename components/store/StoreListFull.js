@@ -9,7 +9,7 @@ import { loading } from "../master/loading/loading";
 
 function StoreListFull() {
     const dispatch = useDispatch();
-    const { storeList, isLoading, paginate, selectedLocation } = useSelector((state) => state.StoreReducer);
+    const { storeList, isLoading, paginate, selectedLocation } = useSelector((state) => state.store);
 
     let list;
     if(isLoading) {
@@ -20,12 +20,11 @@ function StoreListFull() {
         </div>
     }
 
-
     const paginateHandler = (page) => {
         if (!page) return;
-    
+
         window.scrollTo({ top: 0, behavior: "smooth" });
-    
+
         dispatch(getFilteredStoreList(selectedLocation, page.selected + 1));
     };
 
@@ -45,7 +44,7 @@ function StoreListFull() {
                                 }
                             </div>
                         </a>
-                    </Link>   
+                    </Link>
                 </div>
         ))
     }
@@ -69,7 +68,7 @@ function StoreListFull() {
                 <div className="col-12 px-0">
                     {
                         !isLoading && (
-                            <Paginate 
+                            <Paginate
                                 pageCount={paginate.pageCount.length}
                                 onPageChange={paginateHandler}
                                 currentPage={paginate.currentPage}

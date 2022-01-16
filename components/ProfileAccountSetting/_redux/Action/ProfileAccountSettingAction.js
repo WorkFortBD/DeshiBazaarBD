@@ -299,40 +299,33 @@ export const handleUpdateBillingAddress = (billingAddressInput, userId) => (disp
 }
 
 //handle store billing address
-export const addAddress = (addressInput, type, closeModal, userId, isToastDisable = false) => (dispatch) => {
-    
-    if (typeof addressInput.type === 'undefined' || addressInput.type === "") {
-        addressInput.type = type;
-    }
-
-    if (typeof addressInput.type === 'undefined' || addressInput.type === "") {
-        showToast('error', 'Please give an address type !');
-        return;
-    }
-
+/**
+ * 
+ * @param {Object} addressInput 
+ * @param {String} type -> new_address | update_address
+ * @param {Function} closeModal 
+ * @param {string|number} userId 
+ * @param {boolean} isToastDisable 
+ * @returns {*}
+ */
+export const addAddress = (addressInput, type, closeModal, userId, isToastDisable = false, addressId = null) => (dispatch) => {
     const responseData = {
         status: false,
         isLoading: true,
     }
 
-    let method, url;
+    let method;
+    let url;
+
     if (type === 'new_address') {
         method = 'post';
-        url = `address`;
+        url = `address?user_id=${userId}`;
     } else {
         method = 'put';
-
-        if (typeof addressInput.id === 'undefined' || addressInput.id === "") {
-            method = 'post';
-            url = `address`;
-        } else {
-            url = `address/${addressInput.id}`
-        }
+        url = `address/${addressId}`;
     }
 
     dispatch({ type: Types.STORE_BILLING_ADDRESS, payload: responseData });
-
-    addressInput['user_id'] = userId;
 
     Axios({
         method: method,

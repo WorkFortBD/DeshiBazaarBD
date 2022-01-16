@@ -6,7 +6,7 @@ import content from '../../content.json';
 dayjs.extend(relativeTime);
 
 function StoreProfileDetails() {
-    const { storeInfo } = useSelector(state => state.StoreInfoReducer);
+    const { storeInfo } = useSelector(state => state.storeInfo);
 
     return (
         <div className="store-profile-details shadow-sm">

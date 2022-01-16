@@ -5,7 +5,7 @@ import { getCheckoutPaymentMethods } from './_redux/Action/ShippingInfoAction';
 const CheckoutPaymentMethod = () => {
 
     const dispatch                  = useDispatch();
-    const { paymentMethods }        = useSelector((state) => state.ShippingInfoReducer);
+    const { paymentMethods }        = useSelector((state) => state.OrderShipping);
     const [payMethod, setPayMethod] = useState('cash');
 
     useEffect(() => {
@@ -24,28 +24,20 @@ const CheckoutPaymentMethod = () => {
                         return (
                             <div className="shipping_payment_method_section" key={index + 1}>
                                 <div class="form-check">
-                                    <input 
+                                    <input
                                         class="form-check-input"
                                         onChange={() => {
                                             setPayMethod(item.id);
                                             localStorage.setItem('payment_method', item.id);
                                         }}
-                                        type="radio" 
-                                        name={item.name} 
-                                        id={item.id} 
+                                        type="radio"
+                                        name={item.name}
+                                        id={item.id}
                                         checked={item.id === payMethod ? true : false}
                                     />
-                                    <label class="form-check-label" for={item.id}>
+                                    <label class="form-check-label" htmlFor={item.id}>
                                         {item.name}
                                     </label>
-                                </div>
-
-                                <div style={{ overflow: 'hidden', display: 'block' }}>
-                                    {
-                                        item.methodImg.length > 0 && item.methodImg.map((img, indexValue) => (
-                                            <img className="payment_method_in_shipping" src={img.img} alt="payment method img" key={indexValue} />
-                                        ))
-                                    }
                                 </div>
                             </div>
                         )

@@ -2,13 +2,12 @@ import React, { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import { getUserData, handleChangeUserInput, handleUpdateUserData } from '../ProfileAccountSetting/_redux/Action/ProfileAccountSettingAction';
-import ErrorMessage from '../master/ErrorMessage/ErrorMessage'
-import LoadingSpinner from '../master/LoadingSpinner/LoadingSpinner';
+import ErrorMessage from '../master/message/ErrorMessage';
 
 const PersonalInformationUpdate = () => {
     const dispatch = useDispatch();
-    const { userInputData, userDetails, isSubmitting } = useSelector((state) => state.ProfileAccountSettingReducer);
-    const { userData } = useSelector(state => state.UserDataReducer)
+    const { userInputData, isSubmitting } = useSelector((state) => state.userProfile);
+    const { userData } = useSelector(state => state.user)
     const { register, handleSubmit, errors } = useForm();
 
     useEffect(() => {
@@ -22,6 +21,7 @@ const PersonalInformationUpdate = () => {
     const handleUpdatedProfile = () => {
         dispatch(handleUpdateUserData(userInputData, userData))
     }
+
     return (
         <div className="">
             <h6>Personal Information</h6> <hr />
@@ -53,7 +53,7 @@ const PersonalInformationUpdate = () => {
                             </div>
                             {
                                 errors.first_name && errors.first_name.type === 'required' && (
-                                    <ErrorMessage errorText="First name can't be blank!" />
+                                    <ErrorMessage message="First name can't be blank!" />
                                 )
                             }
                         </div>
@@ -93,7 +93,7 @@ const PersonalInformationUpdate = () => {
                                 />
                                 {
                                     errors.email && errors.email.type === 'required' && (
-                                        <ErrorMessage errorText="Email can't be blank!" />
+                                        <ErrorMessage message="Email can't be blank!" />
                                     )
                                 }
                             </div>
@@ -117,7 +117,7 @@ const PersonalInformationUpdate = () => {
                             </div>
                             {
                                 errors.phone_no && errors.phone_no.type === 'required' && (
-                                    <ErrorMessage errorText="Phone number can't be blank!" />
+                                    <ErrorMessage message="Phone number can't be blank!" />
                                 )
                             }
                         </div>

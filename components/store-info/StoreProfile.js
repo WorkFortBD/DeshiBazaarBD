@@ -8,7 +8,7 @@ import dayjs from 'dayjs';
 
 function StoreProfile() {
     const dispatch = useDispatch();
-    const { storeInfo } = useSelector(state => state.StoreInfoReducer);
+    const { storeInfo } = useSelector(state => state.storeInfo);
     const router = useRouter();
     const [isShowing, SetIsShowing] = useState(false)
 
@@ -16,7 +16,7 @@ function StoreProfile() {
         // SetIsShowing(preState => !preState)
     }
     useEffect(() => {
-        const store = router.query.storeById;
+        const store = router.query.seller_id;
         dispatch(getStoreInfo(store));
     }, [])
 

@@ -1,17 +1,16 @@
 import React, { memo, useEffect } from "react";
-// import { useDispatch, useSelector } from "react-redux";
-// import { getCategories } from "./_redux/Action/CategoryAction";
 import { useRouter } from "next/router";
 import Translate from "../translation/Translate";
-// import LoadingPlaceHolder from "../master/skelleton/LoadingPlaceholder";
 import Image from 'next/image';
+// import { useDispatch, useSelector } from "react-redux";
+// import { getCategories } from "../CategoryWishProductList/_redux/action/CategoryWiseProductAction";
+// import LoadingPlaceHolder from "../master/skelleton/LoadingPlaceholder";
 
 const CategoryList = ({ parentID = null, homepageCategories }) => {
-  // const dispatch = useDispatch();
-
   const router = useRouter();
 
-  // const { categories, loading } = useSelector((state) => state.CategoryReducer);
+  // const dispatch = useDispatch();
+  // const { categories, isLoading } = useSelector((state) => state.category);
 
   // useEffect(() => {
   //   if (!categories.length) {
@@ -24,17 +23,23 @@ const CategoryList = ({ parentID = null, homepageCategories }) => {
   // }, []);
 
   /**
-   * Navigate to Category List page
-   *
-   * @since 1.0.0
+   * Navigate to Category List page.
    *
    * @param string categorySlug
    *
    * @return void
    */
   const navigateCategoryList = (item) => {
+    let categoryType = "";
+
+    if(item.short_code === 'groceries') {
+      categoryType =  'main-category';
+    } else {
+      categoryType = 'category';
+    }
+
     router
-      .push(`/products?category=${encodeURIComponent(item.short_code)}&name=${encodeURIComponent(item.name)}`)
+      .push(`/products?${categoryType}=${encodeURIComponent(item.short_code)}&name=${encodeURIComponent(item.name)}&filter=paginate_no__40`)
       .then((_) => window.scrollTo(0, 0));
   };
 
@@ -42,7 +47,7 @@ const CategoryList = ({ parentID = null, homepageCategories }) => {
     <div className="category-list">
       <div className="row">
           {/* {
-            loading && (
+            isLoading && (
               <LoadingPlaceHolder className="col-lg-2 col-md-3 col-sm-4 col-6" count={12} height={150} />
             )
           } */}

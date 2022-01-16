@@ -4,7 +4,7 @@ import { addOrRemoveWishItem } from './_redux/Action/WishlistAction'
 
 const RemoveWishlist = ({ productId }) => {
     const dispatch = useDispatch();
-    const {isSignedIn} = useSelector(state => state.GlobalReducer);
+    const {isSignedIn} = useSelector(state => state.global);
     
     const addOrRemoveWishlist = (productId) => {
         dispatch(addOrRemoveWishItem(productId, true, isSignedIn));

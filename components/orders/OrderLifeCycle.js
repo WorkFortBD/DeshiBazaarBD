@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { VerticalTimeline, VerticalTimelineElement } from 'react-vertical-timeline-component';
 import 'react-vertical-timeline-component/style.min.css';
-import LoadingSpinner from '../master/LoadingSpinner/LoadingSpinner';
+import LoadingSpinner from '../master/loading/LoadingSpinner';
 import WarningMessage from '../master/warningMessage/WarningMessage';
 import { getOrderLifeCycleData } from './_redux/action/OrderAction';
 import dayjs from "dayjs";
@@ -17,8 +17,8 @@ import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
 const OrderLifeCycle = ({ orderID }) => {
 
     const dispatch              = useDispatch();
-    const OrderLifeCycleDetails = useSelector((state) => state.OrderReducer.OrderLifeCycleDetails)
-    const lifeCycleLoading      = useSelector((state) => state.OrderReducer.lifeCycleLoading)
+    const OrderLifeCycleDetails = useSelector((state) => state.order.OrderLifeCycleDetails)
+    const lifeCycleLoading      = useSelector((state) => state.order.lifeCycleLoading)
     useEffect(() => {
         dispatch(getOrderLifeCycleData(orderID))
     }, []);

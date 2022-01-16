@@ -31,6 +31,8 @@ import 'react-inner-image-zoom/lib/InnerImageZoom/styles.min.css';
 import "../components/orders/scss/order-invoice.scss";
 import MainLayout from "../components/layouts/MainLayout";
 import axiosDefault from "../services/axios-default";
+import Script from 'next/script'
+import * as gtag from '../lib/gtag';
 
 axiosDefault();
 toast.configure();
@@ -71,10 +73,40 @@ function MyApp({ Component, pageProps }) {
         ReactPixel.pageView()
       })
     })
+
+    const handleRouteChange = (url) => {
+      gtag.pageview(url)
+    }
+
+    router.events.on('routeChangeComplete', handleRouteChange)
+
+    return () => {
+      router.events.off('routeChangeComplete', handleRouteChange)
+    }
   }, [router.events])
 
   return (
     <>
+      <Script
+        strategy="afterInteractive"
+        src={`https://www.googletagmanager.com/gtag/js?id=G-1PNGH962LS`}
+      />
+
+      <Script
+        id="gtag-init"
+        strategy="afterInteractive"
+        dangerouslySetInnerHTML={{
+          __html: `
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', '${gtag.GA_TRACKING_ID}', {
+              page_path: window.location.pathname,
+            });
+          `,
+        }}
+      />
+
       <Provider store={Store}>
         {/* Global Site Code Pixel - Facebook Pixel */}
         <Head>

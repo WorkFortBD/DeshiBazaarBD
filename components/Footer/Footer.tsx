@@ -4,15 +4,15 @@ import Link from 'next/link'
 import { useDispatch, useSelector } from 'react-redux';
 
 import FooterBottom from './FooterBottom';
+import SimpleModal from '../master/modal/SimpleModal';
 // import SocialMedia from './SocialMedia';
-import SimpleModal from '../master/Modal/SimpleModal';
-import SimpleBtn from '../master/SimpleBtn/SimpleBtn';
+// import SimpleBtn from '../master/SimpleBtn/SimpleBtn';
 import { subscribeNewsletter } from './_redux/Action/FooterAction';
 const TrackingForm = dynamic(() => import('../Header/TrackingForm'));
 import content from '../../content.json';
 
 const Footer = () => {
-    const {isLoading}       = useSelector(state => state.FooterReducer)
+    const {isLoading}       = useSelector(state => state.footer)
     const dispatch          = useDispatch();
     const [show, setShow]   = useState(false);
     const [email, setEmail] = useState("");
@@ -250,7 +250,7 @@ const Footer = () => {
 
             <SimpleModal
                 handleClose={handleClose}
-                size={"md"}
+                size={"lg"}
                 show={show}
             >
                 <TrackingForm show={show} setShow={setShow} />

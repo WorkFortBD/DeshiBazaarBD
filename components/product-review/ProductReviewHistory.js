@@ -9,7 +9,7 @@ import Link from 'next/link';
 
 const ProductReviewHistory = () => {
     const dispatch = useDispatch();
-    const { isLoading, reviewList } = useSelector((state) => state.ProductReviewReducer);
+    const { isLoading, reviewList } = useSelector((state) => state.productReview);
 
     useEffect(() => {
         const isItem = 0;

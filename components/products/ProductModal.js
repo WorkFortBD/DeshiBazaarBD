@@ -1,15 +1,15 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from "react-redux";
-import LoadingSpinner from '../master/LoadingSpinner/LoadingSpinner';
+import LoadingSpinner from '../master/loading/LoadingSpinner';
 
-import SimpleModal from "../master/Modal/SimpleModal";
+import SimpleModal from "../master/modal/SimpleModal";
 import ProductSingleFull from "./ProductSingleFull";
 import { getSingleProductDetailsAction, toggleProductModalAction } from './_redux/Action/ProductAction';
 
 const ProductModal = () => {
 
     const dispatch = useDispatch();
-    const { isModalOpen, product, productSlug } = useSelector(state => state.ProductReducer);
+    const { isModalOpen, product, productSlug } = useSelector(state => state.product);
 
     useEffect(() => {
         dispatch(getSingleProductDetailsAction(productSlug));
@@ -17,7 +17,8 @@ const ProductModal = () => {
 
     return (
         <SimpleModal
-            size="xl" show={isModalOpen}
+            size="xl"
+            show={isModalOpen}
             handleClose={() => dispatch(toggleProductModalAction(''))}
         >
             {

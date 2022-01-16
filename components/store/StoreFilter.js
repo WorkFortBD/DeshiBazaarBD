@@ -8,8 +8,8 @@ import { clearLocation, locationChanged } from './_redux/action/store-action';
 
 function StoreFilter() {
     const dispatch = useDispatch();
-    const { divisionList, cityList, areaList, selectedAddress } = useSelector((state) => state.ProfileAccountSettingReducer);
-    const { selectedLocation } = useSelector((state) => state.StoreReducer);
+    const { divisionList, cityList, areaList, selectedAddress } = useSelector((state) => state.userProfile);
+    const { selectedLocation } = useSelector((state) => state.store);
 
     const { register, setValue } = useForm();
 

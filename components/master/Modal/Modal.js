@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 function Modal(props) {
   const [modalRoot, setModalRoot] = useState(null);
-  const { children, closeModalHandler, visible, style, sideModal = false } = props;
+  const { children, closeModalHandler, visible, style = {}, sideModal = false } = props;
 
   let variants;
     if(sideModal) {

@@ -17,7 +17,7 @@ const HeaderWishlist = () => {
     }
   };
 
-  const { wishList } = useSelector((state) => state.WishlistReducer);
+  const { wishList } = useSelector((state) => state.wishlist);
 
   useEffect(() => {
     dispatch(getWishListData());

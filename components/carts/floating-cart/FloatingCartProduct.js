@@ -20,7 +20,11 @@ function FloatingCartProduct({ item }) {
       </div>
       <div className="floating-cart__product-right">
         <div className="floating-cart__product-details">
-          <p className="floating-cart__product-name">{item.productName}</p>
+          <p className="floating-cart__product-name text-capitalize">
+            {
+              item.name && item.name.toLowerCase()
+            }
+          </p>
           <p className="floating-cart__product-price">
             {item.quantity} <span>X</span>&nbsp;
             {formatCurrency(item.offerPrice !== null && item.offerPrice !== 0 && item.offerPrice !== "0" ? item.offerPrice : item.price)} {activeCurrency('code')}

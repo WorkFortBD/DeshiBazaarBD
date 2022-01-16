@@ -9,7 +9,7 @@ import Translate from "../translation/Translate.js";
 const OrderList = () => {
 
     const dispatch = useDispatch();
-    const { orderList, isLoading } = useSelector((state) => state.OrderReducer);
+    const { orderList, isLoading } = useSelector((state) => state.order);
 
     useEffect(() => {
         dispatch(getUserOrderList(5))

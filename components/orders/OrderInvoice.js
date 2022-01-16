@@ -18,7 +18,7 @@ import { productImageUrl } from '../../services/ProductService';
 const OrderInvoice = ({ title = translate('Invoice'), id, is_invoice = false }) => {
 
     const dispatch = useDispatch();
-    const { orderDetails, isLoading } = useSelector((state) => state.OrderReducer);
+    const { orderDetails, isLoading } = useSelector((state) => state.order);
 
     useEffect(() => {
         dispatch(getOrderDetails(id))
@@ -37,7 +37,7 @@ const OrderInvoice = ({ title = translate('Invoice'), id, is_invoice = false }) 
             {
                 typeof orderDetails !== 'undefined' && orderDetails !== null &&
                 <div className="row" id="printable-invoice-area">
-                    <div className="col-12" >
+                    <div className="col-12 p-0 p-md-2" >
                         <div className="bg-white text-center py-4 mb-3">
                             <div style={{color: 'var(--color-green-light)'}}>
                                 <p style={{fontSize: '20px', fontWeight: '600'}} >Thank you</p>
@@ -46,13 +46,13 @@ const OrderInvoice = ({ title = translate('Invoice'), id, is_invoice = false }) 
                             <p style={{fontSize: '20px', fontWeight: '600'}}>Your order successfully placed</p>
                         </div>
                     </div>
-                    <div className="col-md-7">
+                    <div className="col-12 mb-3 col-lg-8 p-0 p-md-2">
                         <div className="card card-body order-success-left">
                             <div className="row order-invoice-header">
-                                <div className="col-3">
+                                <div className="col-12 col-lg-3">
                                     <img src={'/images/logos/logo-en.svg'} alt="" className="invoice-logo" width={100} />
                                 </div>
-                                <div className="col-9">
+                                <div className="col-12 mt-2">
                                     <h3>{title} {is_invoice ? `#${id}` : ``} </h3>
                                     <h4><Translate>Order No </Translate>: <span className="small">{id}</span></h4>
                                     <p><Translate>Order Placed at </Translate> : {' '}
@@ -135,14 +135,14 @@ const OrderInvoice = ({ title = translate('Invoice'), id, is_invoice = false }) 
                             </div>
                         </div>
                     </div>
-                    <div className="col-md-5">
+                    <div className="col-12 col-lg-4 p-0 p-md-2">
                         <div className="card card-body order-success-right">
-                            <button className="btn btn-success btn-sm btn-print non-printable" onClick={() => printDiv('printable-invoice-area')}> 
+                            {/* <button className="btn btn-success btn-sm btn-print non-printable" onClick={() => printDiv('printable-invoice-area')}> 
                                 <span>
                                     <i className="fas fa-print"></i>
                                 </span>
                                 {' '} <Translate>Print</Translate>
-                            </button>
+                            </button> */}
 
                             <h3><Translate>Order Summary</Translate></h3>
                             {orderDetails.items && orderDetails.items.length > 0 && orderDetails.items.map((product, indexProduct) => (

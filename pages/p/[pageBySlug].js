@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import LoadingSpinner from "../../components/master/LoadingSpinner/LoadingSpinner";
+import LoadingSpinner from "../../components/master/loading/LoadingSpinner";
 import DOMPurify from 'dompurify';
 
 export default function PageBySlug(props) {

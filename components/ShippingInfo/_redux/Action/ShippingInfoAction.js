@@ -11,7 +11,7 @@ export const getCheckoutPaymentMethods = () => (dispatch) => {
         },
         {
             id: "online",
-            name: "Online Banking",
+            name: "Online Banking (Bkash, Nagad, Rocket and Others)",
             methodImg: [
                 { img: "https://iconape.com/wp-content/files/qf/373193/png/373193.png" },
                 { img: "https://seeklogo.com/images/N/nagad-logo-7A70CCFEE0-seeklogo.com.png" },

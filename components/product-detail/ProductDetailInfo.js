@@ -28,8 +28,8 @@ const ProductDetailInfo = (props) => {
   const { product } = props;
   const { id: productId } = product;
   const [quantity, setQuantity] = useState(1);
-  const { carts } = useSelector((state) => state.CartReducer);
-  const { isSignedIn } = useSelector(state => state.GlobalReducer)
+  const { carts } = useSelector((state) => state.cart);
+  const { isSignedIn } = useSelector(state => state.global)
   const [filterCarts, setFilterCarts] = useState(null);
   const [updatedID, setUpdatedID] = useState(null);
   const [previewImg, setPreviewImg] = useState("");
@@ -150,9 +150,9 @@ const ProductDetailInfo = (props) => {
           <Breadcrumb>
             {typeof product.category !== "undefined" &&
               product.category !== null && (
-                <Link href={`/products?category=${encodeURIComponent(product.category.slug)}&name=${encodeURIComponent(product.category.name)}`}>
+                <Link href={`/products?category=${encodeURIComponent(product.category.slug)}&name=${encodeURIComponent(product.category.name)}&filter=paginate_no__40`}>
                   <Breadcrumb.Item
-                    href={`/products?category=${encodeURIComponent(product.category.slug)}&name=${encodeURIComponent(product.category.name)}`}
+                    href={`/products?category=${encodeURIComponent(product.category.slug)}&name=${encodeURIComponent(product.category.name)}&filter=paginate_no__40`}
                   >
                     {product.category.name}
                   </Breadcrumb.Item>
@@ -161,9 +161,9 @@ const ProductDetailInfo = (props) => {
 
             {typeof product.sub_category !== "undefined" &&
               product.sub_category !== null && (
-                <Link href={`/products?category=${encodeURIComponent(product.sub_category.slug)}&name=${encodeURIComponent(product.sub_category.name)}`}>
+                <Link href={`/products?category=${encodeURIComponent(product.sub_category.slug)}&name=${encodeURIComponent(product.sub_category.name)}&filter=paginate_no__40`}>
                   <Breadcrumb.Item
-                    href={`/products?category=${encodeURIComponent(product.sub_category.slug)}&name=${encodeURIComponent(product.sub_category.name)}`}
+                    href={`/products?category=${encodeURIComponent(product.sub_category.slug)}&name=${encodeURIComponent(product.sub_category.name)}&filter=paginate_no__40`}
                   >
                     {product.sub_category.name}
                   </Breadcrumb.Item>
@@ -172,9 +172,9 @@ const ProductDetailInfo = (props) => {
 
             {typeof product.sub_category2 !== "undefined" &&
               product.sub_category2 !== null && (
-                <Link href={`/products?category=${encodeURIComponent(product.sub_category2.slug)}&name=${encodeURIComponent(product.sub_category2.name)}`}>
+                <Link href={`/products?category=${encodeURIComponent(product.sub_category2.slug)}&name=${encodeURIComponent(product.sub_category2.name)}&paginate_no__40`}>
                   <Breadcrumb.Item
-                    href={`/products?category=${encodeURIComponent(product.sub_category2.slug)}&name=${encodeURIComponent(product.sub_category2.name)}`}
+                    href={`/products?category=${encodeURIComponent(product.sub_category2.slug)}&name=${encodeURIComponent(product.sub_category2.name)}&paginate_no__40`}
                   >
                     {product.sub_category2.name}
                   </Breadcrumb.Item>
@@ -217,7 +217,7 @@ const ProductDetailInfo = (props) => {
                           </div>
                           <div className="col-lg-6 px-0">
                             <div className="product_details_information py-2">
-                              <h2 className="product_title pt-3">{product.name}</h2>
+                              <h2 className="product_title pt-3 text-uppercase">{product.name && product.name.toLowerCase()}</h2>
 
                               <div className="d-flex justify-content-between align-items-end">
                                 <div>
@@ -236,7 +236,7 @@ const ProductDetailInfo = (props) => {
                                     {typeof product.brand != "undefined" &&
                                       product.brand != null && (
                                         <Link
-                                          href={`/products?brand=${encodeURIComponent(product.brand.slug)}&name=${encodeURIComponent(product.brand.name)}`}
+                                          href={`/products?brand=${encodeURIComponent(product.brand.slug)}&name=${encodeURIComponent(product.brand.name)}&filter=paginate_no__40`}
                                           className="LinkToBrandPage pointer"
                                         >
                                           <span>
@@ -313,7 +313,7 @@ const ProductDetailInfo = (props) => {
                                 </div>
                               </div>
                               <div className="mt-4">
-                              <span className="product-unit">{product.per_unit_value} {' '} {product.unit && product.unit.actual_name && product.unit.actual_name}</span>
+                              <span className="product-unit font-weight-500">{product.per_unit_value} {' '} {product.unit && product.unit.actual_name && product.unit.actual_name}</span>
                                 <PriceCalculation item={product} />
                               </div>
                               <hr />
@@ -376,9 +376,12 @@ const ProductDetailInfo = (props) => {
                                   </div>
                                 </div>
                               </div>
+                              <div className="mt-3 mt-lg-4">
+                                <span className="product_details_section__exceed-amount-message">
+                                  Pay 10&#37; advance if purchase amount above 2000 BDT
+                                </span>
+                              </div>
                             </div>
-
-
                           </div>
                         </div>
                       </div>

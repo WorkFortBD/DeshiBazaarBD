@@ -17,13 +17,13 @@ import { showToast } from "../components/master/Helper/ToastHelper";
 
 
 const Checkout = ()=> {
-	const router 							   = useRouter();
-	const dispatch                             = useDispatch();
-	const { customerInfo }                     = useSelector((state) => state.DeliveryInfoReducer);
-	const { couponData, shippingCost, coupon } = useSelector((state) => state.OrderReducer);
-	const { carts, totalPrice, totalQuantity } = useSelector((state) => state.CartReducer);
-	const { userData } = useSelector((state) => state.UserDataReducer);
-	const { billingAddress, shippingAddress, userInputData, isLoading } = useSelector(state => state.ProfileAccountSettingReducer);
+	const router 							  							= useRouter();
+	const dispatch                             							= useDispatch();
+	const { customerInfo }                     							= useSelector((state) => state.orderDelivery);
+	const { couponData, shippingCost, coupon } 							= useSelector((state) => state.order);
+	const { carts, totalPrice, totalQuantity } 							= useSelector((state) => state.cart);
+	const { userData } 													= useSelector((state) => state.user);
+	const { billingAddress, shippingAddress, userInputData, isLoading } = useSelector(state => state.userProfile);
 
 	useEffect(() => {
 		dispatch(getCartsAction());
@@ -43,18 +43,8 @@ const Checkout = ()=> {
 			return;
 		}
 
-		if((billingAddress && billingAddress.length === 0) && (shippingAddress && shippingAddress.length === 0)) {
+		if((shippingAddress && shippingAddress.length === 0)) {
 			showToast('error', 'Please add delivery information');
-			return; // @todo add toast message
-		}
-
-		if(billingAddress && billingAddress.length === 0) {
-			showToast('error', 'Please add a billing address');
-			return; // @todo add toast message
-		}
-		
-		if(shippingAddress && shippingAddress.length === 0) {
-			showToast('error', 'Please add a shipping address');
 			return; // @todo add toast message
 		}
 
@@ -75,7 +65,7 @@ const Checkout = ()=> {
 
     if(!isLoading && (billingAddress && billingAddress.length > 0) || (shippingAddress && shippingAddress.length > 0)) {
 		deliveryInfo = (
-			<AddressBook 
+			<AddressBook
 				billingAddress={billingAddress} 
 				shippingAddress={shippingAddress} 
 				userInputData={userInputData} 
@@ -85,7 +75,7 @@ const Checkout = ()=> {
     }
 
 	if(!isLoading && (billingAddress && billingAddress.length === 0) && (shippingAddress && shippingAddress.length === 0)) {
-		deliveryInfo = <DeliveryInfo />
+		deliveryInfo = <DeliveryInfo  />
 	}
 
 	return (

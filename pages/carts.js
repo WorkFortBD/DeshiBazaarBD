@@ -16,6 +16,7 @@ import {
 } from "../components/carts/_redux/action/CartAction";
 
 import dynamic from 'next/dynamic';
+import { handleShippingCost } from "../components/orders/_redux/action/OrderAction";
 
 const CartProduct = dynamic(() => import('../components/carts/cart-product/CartProduct'));
 
@@ -23,11 +24,11 @@ export default function Carts() {
   const router = useRouter();
   const dispatch = useDispatch();
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const { isModalActive } = useSelector((state) => state.GlobalReducer);
+  const { isModalActive } = useSelector((state) => state.global);
   const { supplierWiseCarts, carts, checkedAllCarts } = useSelector(
-    (state) => state.CartReducer
+    (state) => state.cart
   );
-  const userData = useSelector((state) => state.UserDataReducer.userData);
+  const userData = useSelector((state) => state.user.userData);
 
   const deleteItemsHandler = () => {
     dispatch(toggleModal());
@@ -51,16 +52,27 @@ export default function Carts() {
 
   const clearAllItem = () => {
     dispatch(removeAllCartItem());
-    toggleModalHandler()
+    dispatch(handleShippingCost());
+    toggleModalHandler();
   };
-
+  
+  const selectAllHandler = () => {
+    dispatch(toggleAllCartSelection(!checkedAllCarts));
+    dispatch(handleShippingCost());
+  }
+  
+  const selectShopHandler = (item) => {
+    dispatch(toggleAllCartSelection(!item.isChecked, null, item.sellerID));
+    dispatch(handleShippingCost());
+  }
+ 
   return (
     <>
         <Modal closeModalHandler={toggleModalHandler} visible={isModalVisible}>
           <p className="remove_title">Cart item</p>
           <div className="mb-3">All products will be removed</div>
           <div className="d-flex justify-content-end">
-            <button
+            <button 
               className="custom_secondary_btn custom-button-component"
               onClick={toggleModalHandler} >
               Cancel
@@ -96,8 +108,8 @@ export default function Carts() {
                     {
                       carts.length > 0 && (
                         <>
-                          <div className="pointer d-flex align-items-center" onClick={() => dispatch(toggleAllCartSelection(!checkedAllCarts))}>
-                            <input className="cart-checkbox" type="checkbox" checked={checkedAllCarts} onChange={() => { }} />
+                          <div className="pointer d-flex align-items-center" onClick={selectAllHandler}>
+                            <input type="checkbox" checked={checkedAllCarts} onChange={() => { }} />
                             &nbsp; Select All ({carts.length} items)
                           </div>
                           <div>
@@ -116,7 +128,7 @@ export default function Carts() {
                             <div className="row justify-content-between">
                               <div className="col-lg-6">
                                 <div className="cart_shop_name d-flex">
-                                  <input className="cart-checkbox" type="checkbox" checked={item.isChecked} onChange={() => dispatch(toggleAllCartSelection(!item.isChecked, null, item.sellerID))} />
+                                  <input type="checkbox" checked={item.isChecked} onChange={() => selectShopHandler(item)} />
                                   <div className="ml-2">
                                     <div className="cart_details_body">
                                       <p>
@@ -159,7 +171,7 @@ export default function Carts() {
                       {
                         carts.length <= 0 && (
                           <div>
-                            <img src="/images/db-empty-cart.png" alt="empty cart" />
+                            <img width={240} height={160} src="/images/db-empty-cart.png" alt="empty cart" />
                             <div>
                               <p>Oop!!! Your cart is empty! Start shopping</p>
                             </div>

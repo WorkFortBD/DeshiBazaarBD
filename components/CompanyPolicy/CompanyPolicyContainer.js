@@ -5,7 +5,7 @@ import { getCompanyPolicyList } from './_redux/Action/CompanyPolicyAction';
 const CompanyPolicyContainer = () => {
 
     const dispatch   = useDispatch();
-    const policyList = useSelector((state) => state.CompanyPolicyReducer.policyList);
+    const { policyList } = useSelector((state) => state.companyPolicy);
 
     useEffect(() => {
         if(policyList.length === 0) {

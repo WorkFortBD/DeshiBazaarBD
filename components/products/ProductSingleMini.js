@@ -68,7 +68,7 @@ const ProductSingleMini = ({
       className={`
                 ${
                   columnClassName === "col-md-2" &&
-                  "col-xl-2 col-lg-3 col-md-4 col-6"
+                  "col-xl-2 col-lg-3 col-md-4 col-6 px-2"
                 } 
                 ${
                   columnClassName === "col-md-3" &&
@@ -77,6 +77,7 @@ const ProductSingleMini = ({
                 ${columnClassName === "col-md-12" && "col-12"}
         `}
     >
+      <div className="">
       {/* // <div className={`${(columnClassName === "col-md-2" || columnClassName === "col-md-3") ? columnClassName + ' col-6 col-sm-6' : "col-12"}`}> */}
       <div
         className={`${cardClassName} ${cardClass} ${
@@ -97,11 +98,13 @@ const ProductSingleMini = ({
                       {/* <img src={imageURL} alt={item.name} className="test" /> */}
                       <Image src={imageURL} alt={item.name} className="test" />
                     </div>
-                    <div className="product-card-body-inner">
-                      <h2 className="product-title">
-                        <Translate>{item.name}</Translate>
-                      </h2>
-                      <span className="product-unit">{item.per_unit_value} {' '} {item.unit_name && item.unit_name}</span>
+                    <div className="product-card-body-inner" style={{minHeight: '110px', maxHeight: '110px', display: 'flex', flexDirection: 'column', justifyContent: 'center'}}>
+                    <span className="product-title pb-1 text-capitalize text-center">
+                      <span className="font-14">
+                        {item.name && item.name.toLowerCase()}
+                      </span>
+                    </span>
+                      <span className="product-unit font-weight-500">{item.per_unit_value} {' '} {item.unit_name && item.unit_name}</span>
                       <p
                         className={`stock-status ${
                           parseInt(item.current_stock) > 0
@@ -147,20 +150,27 @@ const ProductSingleMini = ({
             </>
           )}
 
+          {/* active box */}
+
           {(columnClassName === "col-md-3" ||
             columnClassName === "col-md-12") && (
             <>
               <div>
                   <Link href={uri}>
                     <a className="product-card-link">
-                  <div style={{overflow: 'hidden', marginTop: '1rem'}}>
+                  <div className="mb-2" style={{overflow: 'hidden', marginTop: '1rem'}}>
                     {/* <img src={imageURL} alt={item.name} className="img-fluid" /> */}
                     <Image src={imageURL} alt={item.name} className="img-fluid" />
                     {/* <Image src={imageURL} alt={item.name} width={220} height={220} /> */}
                   </div>
-                  <div>
-                    <h2 className="product-title px-3">{item.name}</h2>
-                    <span className="product-unit">{item.per_unit_value} {' '} {item.unit_name && item.unit_name}</span>
+                  <div style={{minHeight: '110px', maxHeight: '110px', display: 'flex', flexDirection: 'column', justifyContent: 'center'}}>
+                    <span className="product-title px-2 pb-1 text-capitalize text-center">
+                      <span className="font-14">
+                        {item.name && item.name.toLowerCase()}
+                      </span>
+                    </span>
+                    {/* <h2 className="product-title px-3 text-capitalize">{item.name && item.name.toLowerCase()}</h2> */}
+                    <span className="product-unit font-weight-500">{item.per_unit_value} {' '} {item.unit_name && item.unit_name}</span>
                     <p
                       className={`stock-status ${
                         parseInt(item.current_stock) > 0
@@ -206,6 +216,7 @@ const ProductSingleMini = ({
           )}
         </div>
       </div>
+      </div>
     </div>
   )
 
@@ -223,11 +234,13 @@ const ProductSingleMini = ({
                 
               </div>
             
-              <div className="product-card-body-inner">
-                <h2 className="product-title">
-                  <Translate>{item.name}</Translate>
-                </h2>
-                <span className="product-unit">{item.per_unit_value} {' '} {item.unit_name && item.unit_name}</span>
+              <div className="product-card-body-inner" style={{minHeight: '110px', maxHeight: '110px', display: 'flex', flexDirection: 'column', justifyContent: 'center'}}>
+                <span className="product-title pb-1 text-capitalize text-center">
+                  <span className="font-14">
+                    {item.name && item.name.toLowerCase()}
+                  </span>
+                </span>
+                <span className="product-unit font-weight-500">{item.per_unit_value} {' '} {item.unit_name && item.unit_name}</span>
                 <p
                   className={`stock-status ${
                     parseInt(item.current_stock) > 0

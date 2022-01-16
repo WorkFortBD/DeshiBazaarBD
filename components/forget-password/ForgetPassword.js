@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React from "react";
 import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
-import ErrorMessage from "../master/ErrorMessage/ErrorMessage";
+import ErrorMessage from "../master/message/ErrorMessage";
 import SimpleBtn from "../master/SimpleBtn/SimpleBtn";
 import { useDispatch, useSelector } from "react-redux";
 import { checkIsValidUser } from "./_redux/action/forget-password-action";
@@ -10,7 +10,7 @@ function ForgetPassword() {
   const dispatch = useDispatch();
   const { register, handleSubmit, errors } = useForm();
   const { isLoading, isValidUser } = useSelector(
-    (state) => state.ForgetPasswordReducer
+    (state) => state.authForgetPassword
   );
   const router = useRouter();
 
@@ -49,7 +49,7 @@ function ForgetPassword() {
                       })}
                     />
                     {errors.email && (
-                      <ErrorMessage errorText="Phone number or email is required" />
+                      <ErrorMessage message="Phone number or email is required" />
                     )}
                   </div>
                   <div>

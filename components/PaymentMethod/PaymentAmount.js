@@ -7,11 +7,11 @@ import { handleShippingCost } from '../orders/_redux/action/OrderAction';
 
 const PaymentAmount = () => {
     const dispatch = useDispatch();
-    const carts = useSelector((state) => state.CartReducer.carts);
-    const totalPrice = useSelector((state) => state.CartReducer.totalPrice);
-    const couponData = useSelector((state) => state.CartReducer.couponData);
-    const shippingCost = useSelector((state) => state.CartReducer.shippingCost);
-    const shippingCostLoading = useSelector((state) => state.CartReducer.shippingCostLoading);
+    const carts = useSelector((state) => state.cart.carts);
+    const totalPrice = useSelector((state) => state.cart.totalPrice);
+    const couponData = useSelector((state) => state.cart.couponData);
+    const shippingCost = useSelector((state) => state.cart.shippingCost);
+    const shippingCostLoading = useSelector((state) => state.cart.shippingCostLoading);
 
     useEffect(() => {
         dispatch(getCartsAction());

@@ -8,130 +8,92 @@ import {
   getSubCategories,
   resetFilterParams,
   setFilterParams,
-} from "./_redux/Action/CategoryWiseProductAction";
+} from "./_redux/action/CategoryAction";
 import {useRouter} from 'next/router'
 import Image from 'next/image';
 import Modal from "../master/Modal/Modal";
-import { getShopList } from "../Shop/_redux/Action/ShopAction";
 import Axios from 'axios'
 import Paginate from "../master/paginate/Paginate";
+import ImageWithFallback from '../master/Image/Image';
+import Link from 'next/link';
+import { parseFilterString, parseUri } from "../../helper/parse-filter-query";
 
-const CategoryWishProductContainer = () => {
-  const [showFilter, setShowFilter] = useState(false);
-  const { paginate, filterParams, categoryBrandDetails, isLoading } = useSelector(
-    (state) => state.CategoryWiseProductReducer
-  );
-  // const firstRenderRef = useRef(true);
+const CategoryWishProductContainer = ({ isMainCategory, subCategories, mainCategoryBanner }) => {
+  const [showFilter, setShowFilter]              = useState(false);
+  const [currentPage, setCurrentPage]            = useState(1);
+  const [filterParams, setFilterParamsFromQuery] = useState(null);
+  const dispatch                                 = useDispatch();
+  const router                                   = useRouter();
+  const {type: typeQuery = "", name = ""}        = router.query;
+  const { paginate, categoryBrandDetails, isLoading } = useSelector((state) => state.category);
 
-  const dispatch = useDispatch();
+  const paginateHandler = (page) => {
+    if (!page) return;
 
-  const router = useRouter();
-  const {brand: brandQuery = "", category: categoryQuery = "", type: typeQuery = "", storeById = "", search: searchQuery = ""} = router.query;
-  
-  const {
-    search,
-    category,
-    brand,
-    min_price,
-    max_price,
-    attributes,
-    rating,
-    paginate_no,
-    order_by,
-    seller_id,
-    order,
-    type,
-    page
-  } = filterParams;
+    window.scrollTo({ top: 0, behavior: "smooth" });
+
+    router.replace({
+      query: parseFilterString(router.query, {page: page.selected + 1})
+    })
+  };
+
+  const getImgSrc = () => {
+    let src = categoryBrandDetails?.banner_url ?? "";
+
+    if(isMainCategory) {
+      src = mainCategoryBanner;
+    }
+
+    if(typeQuery === 'haat-bazaar') {
+      src = '/images/campaign/haatbazaar-banner.jpg';
+    }
+
+    if(typeQuery === 'super-sale') {
+      src = '/images/campaign/super-sale.jpg';
+    }
+
+    if(typeQuery === 'masher-bazaar') {
+      src = '/images/campaign/masher-bazaar-banner.jpg';
+    }
+
+    return src;
+  }
 
   useEffect(() => {
-    const queries = {}
-    
-    if(router.query["storeById"]) {
-      queries["storeById"] = router.query.storeById
+    const source = Axios.CancelToken.source();
+    window.scrollTo({ top: 0, behavior: "smooth" }); // Scroll to top after mount
+    const {filterParam, finalUriObj} = parseUri(router.query);
+
+    const currentPage = finalUriObj['page'] || 1;
+
+    setCurrentPage(currentPage);
+    setFilterParamsFromQuery(finalUriObj);
+
+    dispatch(getFilteredProducts(filterParam, source));
+
+    const category = router.query?.['category'] || null;
+
+    dispatch(getSubCategories(category));
+
+    const cloneQueries = { ...finalUriObj };
+
+    if(router.query?.['category']) {
+      dispatch(getCategoryOrBrandDetails('categories/' + router.query?.['category']));
     }
-    
-    if(router.query["brand"]) {
-      queries["brand"] = router.query.brand
+
+    if(router.query?.['brand']) {
+      dispatch(getCategoryOrBrandDetails('brands/' + router.query?.['brand']));
     }
-    
-    if(router.query["category"]) {
-      queries["category"] = router.query.category
+
+    cloneQueries['category'] = [null, cloneQueries?.['category']] || [];
+    cloneQueries['brand']    = cloneQueries?.['brand']?.split?.(',') || [];
+
+    dispatch(setFilterParams(cloneQueries));
+
+    return () => {
+      source.cancel()
     }
-    
-    if(router.query["type"]) {
-      queries["type"] = router.query.type
-    }
-    
-    if(router.query["storeById"]) {
-      queries["seller_id"] = router.query.storeById
-    }
-    
-    if(router.query["search"]) {
-      queries["search"] = router.query.search
-    }
-    
-    const cloneFilterParams = {...filterParams};
-
-    for(const query in queries) {
-      if(Array.isArray(cloneFilterParams[query])) {
-        // cloneFilterParams[query] = [];
-
-        if(query === 'brand') {
-          cloneFilterParams.seller_id = "";
-          cloneFilterParams.search = "";
-          cloneFilterParams.category = [];
-          cloneFilterParams.page = 1;
-          cloneFilterParams[query].push(queries[query]);
-
-          dispatch(getCategoryOrBrandDetails('brands/' + queries[query]));
-        }
-        if(query === 'category') {
-          cloneFilterParams.search = "";
-          cloneFilterParams.seller_id = "";
-          cloneFilterParams.brand = [];
-          // check if category same or not after remount
-          if(cloneFilterParams[query].length > 0 && !(cloneFilterParams[query][0] === queries[query])) {
-            cloneFilterParams.page = 1;
-            cloneFilterParams[query] = [];
-            cloneFilterParams[query].push(queries[query]);
-          } else {
-
-            cloneFilterParams[query] = [];
-            cloneFilterParams[query].push(queries[query]);
-          }
-
-          dispatch(getSubCategories(queries[query]))
-
-          dispatch(getCategoryOrBrandDetails('categories/' + queries[query]));
-        }
-
-      } else {
-        cloneFilterParams.category = [];
-        cloneFilterParams.brand = [];
-        cloneFilterParams.page = 1;
-        cloneFilterParams.seller_id = "";
-
-        if(query === 'seller_id') {
-          cloneFilterParams[query] = queries[query]
-          dispatch(getSubCategories(null))
-        }
-        if(query === 'type') {
-          cloneFilterParams[query] = queries[query]
-          dispatch(getSubCategories(null))
-        }
-        if(query === 'search') {
-          cloneFilterParams[query] = queries[query]
-          dispatch(getSubCategories(null))
-        }
-      }
-    }
-    dispatch(setFilterParams(cloneFilterParams));
-
-    dispatch(getShopList());
-
-  }, [brandQuery, categoryQuery, typeQuery, storeById, searchQuery]);
-
+  }, [JSON.stringify(router.query)]);
 
   useEffect(() => {
     return () => {
@@ -139,49 +101,9 @@ const CategoryWishProductContainer = () => {
     }
   }, [])
 
-
-  useEffect(() => {
-    // if(firstRenderRef.current) {
-    //   firstRenderRef.current = false
-    //   return
-    // }
-    const source = Axios.CancelToken.source();
-    dispatch(getFilteredProducts(filterParams, source));
-    window.scrollTo({ top: 0, behavior: "smooth" }); // Scroll to top after mount
-
-    return () => {
-      source.cancel()
-    }
-  }, [
-    attributes,
-    JSON.stringify(brand),
-    JSON.stringify(category),
-    max_price,
-    min_price,
-    rating,
-    search,
-    paginate_no,
-    order_by,
-    order,
-    type,
-    page,
-    seller_id
-  ]);
-
-  const paginateHandler = (page) => {
-    if (!page) return;
-
-    window.scrollTo({ top: 0, behavior: "smooth" });
-
-    const filterParamClone = { ...filterParams };
-    filterParamClone.page  = page.selected + 1;
-
-    dispatch(setFilterParams(filterParamClone));
-  };
-
   return (
     <>
-      <Modal 
+      <Modal
         visible={showFilter}
         closeModalHandler={() => setShowFilter(preState => !preState)}
         sideModal={true}
@@ -191,53 +113,67 @@ const CategoryWishProductContainer = () => {
 
       <section className="pt-2 pt-md-4">
         {
-          categoryBrandDetails.banner_url && (
-              <div className="banner">
+          (categoryBrandDetails.banner_url || typeQuery === 'masher-bazaar' || typeQuery === 'haat-bazaar' || typeQuery === 'super-sale' || isMainCategory) && (
+              <div className="banner mb-md-2 px-1 px-md-3">
                 <div className="banner-photo-box">
-                  <Image src={categoryBrandDetails.banner_url} width={1260} height={280} />
+                  <Image src={getImgSrc()} width={1260} height={280} />
                 </div>
               </div>
           )
         }
 
-        {/* category childs */}
-
-        {/* {
-          categoryBrandDetails.childs.length > 0 && (
-            <div className="childs row justify-content-start">
-              {
-                categoryBrandDetails.childs.map((item, index) => (
-                  <div className="col-6 col-md-2 col-sm-3 mb-sm-2 mb-3" key={index}>
-                    <Link href={`products?${item.parent_id ? 'category' : 'brand'}=${item.id}`}>
-                      <a className="child-logo-box">
-                      <span>{item.name}</span>
+        {
+          isMainCategory && (
+            <div className="pl-1 pl-md-3 mt-3 main-category-title">
+              <span className="font-weight-600">
+                {name}
+              </span>
+            </div>
+          )
+        }
+        <div className={`row ${isMainCategory ? 'my-4' : ''}`}>
+          {
+            isMainCategory &&
+            subCategories?.map?.((item, index) => {
+              return (
+                <div className="col-lg-3 col-md-4 col-6 py-2 py-md-3 px-3 px-md-3 pb-3 m-0 mb-md-3" key={index}>
+                  <div className="pointer">
+                    <Link href={`/products?category=${encodeURIComponent(item.short_code)}&name=${encodeURIComponent(item.name)}&filter=paginate_no__40`}>
+                      <a>
+                        <div className="text-center">
+                          <ImageWithFallback width={400} height={280} src={item?.image_url} alt={item?.name} />
+                          <span className="d-inline-block pt-2 color-secondary color-main-hover font-15 font-weight-500">
+                            {
+                              item?.name
+                            }
+                          </span>
+                        </div>
                       </a>
                     </Link>
                   </div>
-                ))
+                </div>
+              )
+            })
+          }
+          {
+            !isMainCategory &&
+            <div className="col-md-12 mb-5 px-0" style={{fontSize: '14px'}}>
+              <CategoryWishProductList filterParams={filterParams} showFilter={showFilter} showFilterHandler={() => setShowFilter(preState => !preState)} />
+              {
+                !isLoading && paginate.total > paginate.per_page  && (
+                  <>
+                    <Paginate
+                      pageCount={paginate.pages.length}
+                      onPageChange={paginateHandler}
+                      currentPage={currentPage}
+                      perPage={paginate.per_page}
+                      totalItemCount={paginate.total}
+                    />
+                  </>
+                )
               }
             </div>
-          )
-        } */}
-
-        <div className="row">
-          <div className="col-md-12 mb-5 px-0" style={{fontSize: '14px'}}>
-            <CategoryWishProductList showFilter={showFilter} showFilterHandler={() => setShowFilter(preState => !preState)} />
-            {
-              !isLoading && paginate.total > paginate.per_page  && (
-                <>
-                  <Paginate
-                    pageCount={paginate.pages.length}
-                    onPageChange={paginateHandler}
-                    currentPage={filterParams.page}
-                    perPage={paginate.per_page}
-                    totalItemCount={paginate.total}
-                  />
-                </>
-              )
-            }
-
-          </div>
+          }
         </div>
       </section>
     </>

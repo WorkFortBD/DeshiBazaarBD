@@ -1,79 +1,82 @@
 import React, { useState } from "react";
-import { Form } from "react-bootstrap";
+import Form from "react-bootstrap/Form";
 import CategoryWiseMiniProduct from "./CategoryWiseMiniProduct";
 import { useDispatch, useSelector } from "react-redux";
 import {
   setFilterParams,
-} from "./_redux/Action/CategoryWiseProductAction";
+} from "./_redux/action/CategoryAction";
 import classNames from "classnames";
 import {useRouter} from 'next/router';
 import LoadingPlaceHolder from "../master/skelleton/LoadingPlaceholder";
+import { parseFilterString } from "../../helper/parse-filter-query";
 
 
-const CategoryWishProductList = ({showFilter, showFilterHandler}) => {
+const CategoryWishProductList = ({showFilter, showFilterHandler, filterParams}) => {
   const router = useRouter();
-  const dispatch = useDispatch();
-  const { isLoading, paginate } = useSelector(
-    (state) => state.CategoryWiseProductReducer
-  );
-  const {isMobile} = useSelector(state => state.GlobalReducer);
-
-
-  const { filterParams } = useSelector(
-    (state) => state.CategoryWiseProductReducer
-  );
-
-  const [columns, setColumns] = useState("col-md-3");
+  const { isLoading, paginate } = useSelector((state) => state.category);
+  const {isMobile} = useSelector(state => state.global);
 
   const selectHandler = (e) => {
-    let filterParamClone = { ...filterParams };
 
     switch (e.target.value) {
       case "best_match":
-        filterParamClone.order_by = ""
-        filterParamClone.order = ""
+        router.replace({
+          query: parseFilterString(router.query, {order_by: '', order: ''}) 
+        })
         break;
+
       case "price_low_high":
-        filterParamClone.order_by = "price"
-        filterParamClone.order = "asc"
-        break;
+        router.replace({
+          query: parseFilterString(router.query, {order_by: 'price', order: 'asc'}) 
+        })
+      break;
+
       case "price_high_low":
-        filterParamClone.order_by = "price"
-        filterParamClone.order = "desc"
-        break;
+        router.replace({
+          query: parseFilterString(router.query, {order_by: 'price', order: 'desc'})
+        })
+      break;
+
+      case "offer":
+        router.replace({
+          query: parseFilterString(router.query, {order_by: 'offer', order: 'desc'})
+        })
+      break;
+
       case "rating_high":
-        filterParamClone.order_by = "rating"
-        filterParamClone.order = "desc"
-        break;
+        router.replace({
+          query: parseFilterString(router.query, {order_by: 'rating', order: 'desc'})
+        })
+      break;
+
       case "stock_high":
-        filterParamClone.order_by = "stock"
-        filterParamClone.order = "desc"
-        break;
+        router.replace({
+          query: parseFilterString(router.query, {order_by: 'stock', order: 'desc'})
+        })
+      break;
     }
-    dispatch(setFilterParams(filterParamClone));
   }
   const perPageHandler = (e) => {
-    let filterParamClone = { ...filterParams };
 
-    switch (e.target.value) {
-      case "20":
-        filterParamClone.paginate_no = 20
-        break;
-
+    switch (e.target.value) {        
       case "40":
-        filterParamClone.paginate_no = 40
+        router.replace({
+          query: parseFilterString(router.query, {paginate_no: '40', page: '1'})
+        })
         break;
-
-      case "60":
-        filterParamClone.paginate_no = 60
+        
+        case "60":
+        router.replace({
+          query: parseFilterString(router.query, {paginate_no: '60', page: '1'})
+        })
         break;
-
-      case "100":
-        filterParamClone.paginate_no = 100
+        
+        case "100":
+        router.replace({
+          query: parseFilterString(router.query, {paginate_no: '100', page: '1'})
+        })
         break;
     }
-
-    dispatch(setFilterParams(filterParamClone));
   }
 
   const rowClasses = classNames({
@@ -85,27 +88,22 @@ const CategoryWishProductList = ({showFilter, showFilterHandler}) => {
     column_active: showFilter
   })
 
-  // const filterHeadingClasses = classNames({
-  //   "category_wise_product_list_heading": true,
-  //   show: showFilter
-  // })
-
   let title = "";
   
-  const {type, search, name} = router.query;
+  // const {type, search, name} = filterParams;
 
-  if(filterParams.seller_id) {
-    title = filterParams.seller_id;
-  }
+  // if(filterParams.seller_id) {
+  //   title = filterParams.seller_id;
+  // }
 
-  if(type || search || name) {
-    title = type || search || name
-  }
+  if(filterParams?.type || filterParams?.search || filterParams?.name) {
+    title = filterParams.type || filterParams.search || filterParams.name
+  };
 
   return (
     <section className="category_wise_product_list">
       <div className="row justify-content-between my-2 my-md-4">
-        <div className="col-lg-6 col-sm-12">
+        <div className="col-lg-6 col-sm-12 px-1 px-md-3">
           <div className="category_wise_product_list_heading">
             <h5 className="category-search-title">
               {
@@ -127,7 +125,7 @@ const CategoryWishProductList = ({showFilter, showFilterHandler}) => {
             }
           </p>
         </div>
-        <div className="col-lg-6 col-sm-12">
+        <div className="col-lg-6 col-sm-12 px-1 px-md-3">
           <div className="d-flex justify-content-start justify-content-sm-end">
             <div className="filter_view mr-2 d-flex align-items-center" onClick={() => showFilterHandler()}> 
               <div className="product-filter">
@@ -145,17 +143,22 @@ const CategoryWishProductList = ({showFilter, showFilterHandler}) => {
                   <span>Sort by</span>
                 )
               }
-              <Form>
-                <Form.Group controlId="exampleFormSelectCustom">
-                  <Form.Control onChange={selectHandler} as="select" custom>
-                    <option value="best_match">Best Match</option>
-                    <option value="price_low_high">Price Low to High</option>
-                    <option value="price_high_low">Price High to Low</option>
-                    <option value="rating_high">Rating</option>
-                    <option value="stock_high">Stock</option>
-                  </Form.Control>
-                </Form.Group>
-              </Form>
+              {
+                filterParams && (
+                  <Form>
+                    <Form.Group controlId="exampleFormSelectCustom">
+                      <Form.Control defaultValue={checkOptionValue(filterParams, 'sort by')} onChange={selectHandler} as="select" custom>
+                        <option value="best_match">Best Match</option>
+                        <option value="price_low_high">Price Low to High</option>
+                        <option value="price_high_low">Price High to Low</option>
+                        <option value="offer">Offer</option>
+                        <option value="rating_high">Rating</option>
+                        <option value="stock_high">Stock</option>
+                      </Form.Control>
+                    </Form.Group>
+                  </Form>
+                )
+              }
             </div>
             <div className="filter_view d-flex align-items-center">
               {
@@ -163,16 +166,19 @@ const CategoryWishProductList = ({showFilter, showFilterHandler}) => {
                   <span>Per page</span>
                 )
               }
-              <Form>
-                <Form.Group controlId="exampleFormSelectCustom">
-                  <Form.Control onChange={perPageHandler} as="select" custom>
-                    <option value="20">20</option>
-                    <option value="40">40</option>
-                    <option value="60">60</option>
-                    <option value="100">100</option>
-                  </Form.Control>
-                </Form.Group>
-              </Form>
+              {
+                filterParams && (
+                  <Form>
+                    <Form.Group controlId="exampleFormSelectCustom">
+                      <Form.Control defaultValue={checkOptionValue(filterParams, 'per page')} onChange={perPageHandler} as="select" custom>
+                        <option value="40">40</option>
+                        <option value="60">60</option>
+                        <option value="100">100</option>
+                      </Form.Control>
+                    </Form.Group>
+                  </Form>
+                )
+              }
             </div>
           </div>
         </div>
@@ -187,12 +193,50 @@ const CategoryWishProductList = ({showFilter, showFilterHandler}) => {
       <div className={rowClasses}>
         {
           !isLoading && (
-            <CategoryWiseMiniProduct columns={columns} />
+            <CategoryWiseMiniProduct columns="col-md-3" />
           )
         }
       </div>
     </section>
   );
 };
+
+function checkOptionValue(filterParams, type) {
+  if(type === 'sort by') {
+    if(filterParams['order_by'] === 'price' && filterParams['order'] === 'desc') {
+      return 'price_high_low'
+    }
+    
+    if(filterParams['order_by'] === 'price' && filterParams['order'] === 'asc') {
+      return 'price_low_high'
+    }
+  
+    if(filterParams['order_by'] === 'rating') {
+      return 'rating_high'
+    }
+  
+    if(filterParams['order_by'] === 'stock') {
+      return 'stock_high'
+    }
+    
+    return null;
+  }
+  
+  if(type === 'per page') {
+    if(filterParams['paginate_no'] === '40') {
+      return '40'
+    }
+
+    if(filterParams['paginate_no'] === '60') {
+      return '60'
+    }
+
+    if(filterParams['paginate_no'] === '100') {
+      return '100'
+    }
+    
+    return null;
+  }
+}
 
 export default CategoryWishProductList;

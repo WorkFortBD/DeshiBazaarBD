@@ -2,20 +2,20 @@ import React, { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import { getShippingAddressForInput, handleChangeShippingAddressInput, handleSetDataIntoInputField, handleUpdateShippingAddress } from './_redux/Action/ProfileUpdateAction';
-import ErrorMessage from '../master/ErrorMessage/ErrorMessage'
+import ErrorMessage from '../master/message/ErrorMessage'
 import { RHFInput } from 'react-hook-form-input';
 import Select from 'react-select';
 import { Spinner } from 'react-bootstrap'
 import { getLocationData } from '../ProfileAccountSetting/_redux/Action/ProfileAccountSettingAction';
 const ShippingAddressUpdate = () => {
     const dispatch = useDispatch();
-    const countryList = useSelector((state) => state.ProfileAccountSettingReducer.countryList);
-    const cityList = useSelector((state) => state.ProfileAccountSettingReducer.cityList);
-    const areaList = useSelector((state) => state.ProfileAccountSettingReducer.areaList);
-    const isSubmitting = useSelector((state) => state.ProfileAccountSettingReducer.isSubmitting);
-    // const shippingAddressInput = useSelector((state) => state.ProfileAccountSettingReducer.shippingAddressInput);
-    const shippingAddressInput = useSelector((state) => state.ProfileUpdateReducer.shippingAddressInput);
-    const { userData } = useSelector(state => state.UserDataReducer)
+    const countryList = useSelector((state) => state.userProfile.countryList);
+    const cityList = useSelector((state) => state.userProfile.cityList);
+    const areaList = useSelector((state) => state.userProfile.areaList);
+    const isSubmitting = useSelector((state) => state.userProfile.isSubmitting);
+    // const shippingAddressInput = useSelector((state) => state.userProfile.shippingAddressInput);
+    const shippingAddressInput = useSelector((state) => state.userAddress.shippingAddressInput);
+    const { userData } = useSelector(state => state.user)
     const { register, handleSubmit, errors, setValue } = useForm();
 
     //handle change input 
@@ -66,7 +66,7 @@ const ShippingAddressUpdate = () => {
                                 />
                                 {
                                     errors.country_id && errors.country_id.type === 'required' && (
-                                        <ErrorMessage errorText="Country can't be blank!" />
+                                        <ErrorMessage message="Country can't be blank!" />
                                     )
                                 }
                             </div>
@@ -93,7 +93,7 @@ const ShippingAddressUpdate = () => {
                                 />
                                 {
                                     errors.city_id && errors.city_id.type === 'required' && (
-                                        <ErrorMessage errorText="City can't be blank!" />
+                                        <ErrorMessage message="City can't be blank!" />
                                     )
                                 }
                             </div>
@@ -118,7 +118,7 @@ const ShippingAddressUpdate = () => {
                                 />
                                 {
                                     errors.area_id && errors.area_id.type === 'required' && (
-                                        <ErrorMessage errorText="Area can't be blank!" />
+                                        <ErrorMessage message="Area can't be blank!" />
                                     )
                                 }
                             </div>
@@ -144,7 +144,7 @@ const ShippingAddressUpdate = () => {
                                 </textarea>
                                 {
                                     errors.street1 && errors.street1.type === 'required' && (
-                                        <ErrorMessage errorText="Street-1 can't be blank!" />
+                                        <ErrorMessage message="Street-1 can't be blank!" />
                                     )
                                 }
                             </div>
@@ -171,7 +171,7 @@ const ShippingAddressUpdate = () => {
                                 </textarea>
                                 {
                                     errors.street2 && errors.street2.type === 'required' && (
-                                        <ErrorMessage errorText="Street-2 can't be blank!" />
+                                        <ErrorMessage message="Street-2 can't be blank!" />
                                     )
                                 }
                             </div>

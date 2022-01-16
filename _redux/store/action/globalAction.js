@@ -49,3 +49,10 @@ export const checkIsMobileDevice = (isMobile) => {
     payload: isMobile,
   };
 };
+
+export const setWelcomePopup = (isVisible) => {
+  return {
+    type: types.SET_WELCOME_POPUP,
+    payload: isVisible,
+  };
+};

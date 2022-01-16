@@ -17,8 +17,8 @@ const PaymentMethod = () => {
     const [transaction, setTransaction] = useState(-1);
     const [payMethod, setPayMethod] = useState('bkash');
 
-    const paymentMethod = useSelector((state) => state.PaymentMethodReducer.paymentMethod);
-    const isLoading = useSelector((state) => state.PaymentMethodReducer.isLoading);
+    const paymentMethod = useSelector((state) => state.paymentMethod.paymentMethod);
+    const isLoading = useSelector((state) => state.paymentMethod.isLoading);
 
     useEffect(() => {
         dispatch(getPaymentMethodList());

@@ -2,20 +2,20 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import ProfileSideBar from "./ProfileSideBar";
 import { getDefaultAddress } from "../ProfileAccountSetting/_redux/Action/ProfileAccountSettingAction";
-import LoadingSpinner from './../master/LoadingSpinner/LoadingSpinner'
-import SimpleModal from '../master/Modal/SimpleModal';
-import AddressUpdate from "./../ProfileAccountSetting/AddressUpdate";
+import LoadingSpinner from '../master/loading/LoadingSpinner';
+import SimpleModal from '../master/modal/SimpleModal';
 import Link from 'next/link';
 import WarningMessage from "../master/warningMessage/WarningMessage";
 import Translate from "../translation/Translate";
+import DeliveryInfo from "../Delivery/DeliveryInfo";
 
 const ProductProfile = () => {
 
   const dispatch = useDispatch()
-  const { userData, access_token } = useSelector((state) => state.UserDataReducer);
-  const isLoading = useSelector((state) => state.ProfileAccountSettingReducer.isLoading);
-  const defaultShippingAddress = useSelector((state) => state.ProfileAccountSettingReducer.defaultShippingAddress);
-  const defaultBillingAddress = useSelector((state) => state.ProfileAccountSettingReducer.defaultBillingAddress);
+  const { userData, access_token } = useSelector((state) => state.user);
+  const isLoading = useSelector((state) => state.userProfile.isLoading);
+  const defaultShippingAddress = useSelector((state) => state.userProfile.defaultShippingAddress);
+  const defaultBillingAddress = useSelector((state) => state.userProfile.defaultBillingAddress);
   const [show, setShow] = useState(false);
 
   useEffect(() => {
@@ -72,7 +72,6 @@ const ProductProfile = () => {
                       </span>
                     </p>
                   </div>
-                 
                 </div>
                 <div className="col-lg-5 card m-1 p-3 default_height">
                   <div className="card-title">
@@ -88,12 +87,6 @@ const ProductProfile = () => {
                         )
                       }
 
-                      {/* <Link href="/account-setting#address-book">
-                        <a className="text-decoration-none">
-                          <span className="edit_profile_link ml-2">EDIT</span>
-                        </a>
-                      </Link> */}
-
                       {
                         !isLoading && defaultBillingAddress && defaultBillingAddress.length === 0 && defaultShippingAddress.length === 0 && (
                           <span className="edit_profile_link ml-2" onClick={toggleShowHandler}>ADD NEW</span>
@@ -103,7 +96,7 @@ const ProductProfile = () => {
                     </h6>
                     <div className="border-top">
                       <p className="address_sub_title mt-2">
-                        Default Shipping Address :
+                        Delivery Info:
                       </p>
                       {
                         isLoading && (
@@ -130,38 +123,9 @@ const ProductProfile = () => {
                           <WarningMessage text="Default shipping address not found" />
                         )
                       }
-                      <p className="address_sub_title">
-                        Default Billing Address :
-                      </p>
-                      {
-                        isLoading && (
-                          <LoadingSpinner text="Loading Billing Address..." />
-                        )
-                      }
-                      {
-                        defaultBillingAddress && defaultBillingAddress.length > 0 && (
-                          <>
-                            <p>
-                              <span className="user_icon">
-                                <i className="fas fa-map-marked-alt"></i>
-                              </span>
-                              <span className="user_address">
-                                {defaultBillingAddress[0].area}, {defaultBillingAddress[0].street1}, {defaultBillingAddress[0].city} <br />
-                                {defaultBillingAddress[0].country}
-                              </span>
-                            </p>
-                          </>
-                        )
-                      }
-                      {
-                        !isLoading && defaultBillingAddress && defaultBillingAddress.length === 0 && (
-                          <WarningMessage text="Default billing address not found" />
-                        )
-                      }
                     </div>
 
                   </div>
-                  
                 </div>
               </div>
             </div>
@@ -175,7 +139,7 @@ const ProductProfile = () => {
         show={show}
         handleClose={toggleShowHandler}
       >
-        <AddressUpdate addAddress={true} type="new_address" closeModal={toggleShowHandler} />
+        <DeliveryInfo fromAddressBook={true} closeModal={toggleShowHandler} />
       </SimpleModal>
     </>
   );

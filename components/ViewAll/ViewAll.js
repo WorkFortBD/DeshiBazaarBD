@@ -4,7 +4,7 @@ import Translate from "../translation/Translate";
 
 function ViewAll({ type = '' }) {
   return (
-    <Link href={{ pathname: '/products', query: { type: type }}}>
+    <Link href={`/products?type=${type}&filter=paginate_no__40`}>
       <div className="custom-button-component pointer " >
         <Translate>View all</Translate>
         {' '}

@@ -15,7 +15,7 @@ import Link from 'next/link';
 
 const DealFlash = () => {
   const dispatch = useDispatch();
-  const {flashDealList, isLoading} = useSelector(state => state.DealFlashReducer);
+  const {flashDealList, isLoading} = useSelector(state => state.flashDeal);
 
   const addToCart = (product) => {
     if (parseInt(product.current_stock) === 0) {

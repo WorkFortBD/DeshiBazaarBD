@@ -5,6 +5,7 @@ import CartQuantity from '../partials/CartQuantity';
 import { formatCurrency } from '../../../services/currency';
 import { toggleProductModalAction } from '../../products/_redux/Action/ProductAction';
 import Modal from '../../master/Modal/Modal';
+import { handleShippingCost } from '../../orders/_redux/action/OrderAction';
 
 const CartProduct = ({ cart, checkoutPage = false }) => {
   const dispatch = useDispatch();
@@ -15,6 +16,12 @@ const CartProduct = ({ cart, checkoutPage = false }) => {
   const handleDeleteCartProduct = (productID) => {
     dispatch(deleteCartItemAction(productID));
     setShow(false);
+    dispatch(handleShippingCost())
+  }
+
+  const checkHandler = () => {
+    dispatch(toggleAllCartSelection(!cart.isChecked, cart.productID));
+    dispatch(handleShippingCost())
   }
 
   return (
@@ -35,11 +42,11 @@ const CartProduct = ({ cart, checkoutPage = false }) => {
         <div className="col-lg-3 col-5 product_cart_left">
           {
             !checkoutPage && (
-              <input type="checkbox" className="cart-checkbox pointer mr-2" checked={cart.isChecked} onChange={() => dispatch(toggleAllCartSelection(!cart.isChecked, cart.productID))} />
+              <input type="checkbox" className="pointer mr-2" checked={cart.isChecked} onChange={checkHandler} />
             )
           }
           <img
-            src={cart.productImage === null ? 'https://img.icons8.com/plasticine/2x/image.png' : cart.productImage}
+            src={cart.productImage}
             alt={cart.productName}
             className="img-thumbnail product_cart_img"
           />

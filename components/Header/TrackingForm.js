@@ -2,12 +2,12 @@ import { useRouter } from "next/router";
 import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
-import ErrorMessage from "../master/ErrorMessage/ErrorMessage";
+import ErrorMessage from "../master/message/ErrorMessage";
 import { getUserOrderList } from "../orders/_redux/action/OrderAction";
 import dayjs from "dayjs";
 import Link from "next/link";
 import { activeCurrency, formatCurrency } from "../../services/currency";
-import LoadingSpinner from "../master/LoadingSpinner/LoadingSpinner";
+import LoadingSpinner from "../master/loading/LoadingSpinner";
 import WarningMessage from "../master/warningMessage/WarningMessage";
 
 const TrackingForm = ({ show, setShow }) => {
@@ -18,8 +18,8 @@ const TrackingForm = ({ show, setShow }) => {
     formState: { errors },
     handleSubmit,
   } = useForm();
-  const { orderList, isLoading } = useSelector((state) => state.OrderReducer);
-  const userData = useSelector((state) => state.UserDataReducer.userData);
+  const { orderList, isLoading } = useSelector((state) => state.order);
+  const userData = useSelector((state) => state.user.userData);
 
   const onSubmit = (data) => {
     router.push(`/order/${data.orderID}`).then((_) => window.scrollTo(0, 0));
@@ -80,7 +80,7 @@ const TrackingForm = ({ show, setShow }) => {
         />
 
         {errors.orderID && (
-          <ErrorMessage errorText="Please Enter Your Order ID No" />
+          <ErrorMessage message="Please Enter Your Order ID No" />
         )}
         <button
           className="custom-button-component float-right mt-2"

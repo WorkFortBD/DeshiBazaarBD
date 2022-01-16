@@ -11,12 +11,12 @@ import LoadingSkelleton from '../master/skelleton/LoadingSkelleton';
 
 const ProductTopList = () => {
     const dispatch = useDispatch();
+
     useEffect(() => {
-        dispatch(getTopProductList())
+        dispatch(getTopProductList());
     }, [])
 
-    const topProductList = useSelector((state) => state.ProductTopListReducer.topProductList);
-    const isLoading = useSelector((state) => state.ProductTopListReducer.isLoading);
+    const { topProductList,isLoading } = useSelector((state) => state.productsTop);
 
     return (
         <div>

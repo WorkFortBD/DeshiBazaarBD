@@ -26,7 +26,7 @@ const LoginComponent = () => {
   const loginPost = async (values) => {
     setIsLoading(true);
     const res = await signIn('credentials', {
-        email: values.email,
+        email: values.email.trim(),
         password: values.password,
         redirect: false,
     })
@@ -59,18 +59,27 @@ const LoginComponent = () => {
     email: yup.string()
     .required("Required")
     .test('email&pass', 'Enter a valid phone number or email address', value => {
-      const emailRegex = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
-      const phoneRegex = /^[0][1-9]\d{9}$|^[1-9]\d{9}$/; // Change this regex based on requirement
+      if(value === undefined || value === null) return false;
 
-      let isValidEmail = emailRegex.test(value);
-      let isValidPhone = phoneRegex.test(value);
+      const emailRegex = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+      const phoneRegex = /^[0][1-9]\d{9}$|^[1-9]\d{9}$/;
+
+      let isValidEmail = emailRegex.test(value.trim());
+      let isValidPhone = phoneRegex.test(value.trim());
       
       if(!isValidEmail && !isValidPhone) return false
       return true
     }),
     password: yup.string()
-    .min(6, 'Minimum 6 characters required')
+    .min(8, 'Minimum 8 characters required')
     .required('Required')
+    .test('password', 'space not allowed', (value) => {
+      if(value === undefined || value === null) return false;
+
+      if(/\s/g.test(value)) return false;
+
+      return true;
+    })
   });
 
   return (
@@ -85,7 +94,7 @@ const LoginComponent = () => {
           <Form>
             <div className="row">
               <div className="col-12 px-0 px-lg-5">
-                <div className="mb-3">
+                <div className="pb-3 position-relative">
                   <div className="input-box">
                     <label htmlFor="email" className="form-label required">Email / Phone</label>
                     <Field className="form-control" type="text" id="email" name="email" />
@@ -95,7 +104,7 @@ const LoginComponent = () => {
               </div>
 
               <div className="col-12 px-0 px-lg-5">
-                <div className="mb-3">
+                <div className="pb-3 position-relative">
                   <label htmlFor="password" className="form-label required">password</label>
                   <div className="account_input_group">
                       <Field className="form-control" type={showPassword ? 'text' : 'password'} id="password" name="password" />
@@ -139,7 +148,7 @@ const LoginComponent = () => {
                 </div> */}
                 <div className="mt-3" style={{width: '50%'}}>
                   <SimpleBtn disabled={isLoading} variant="success" type="submit" style={{backgroundColor: 'var(--color-green)'}}>
-                    Login &nbsp;
+                    Sign In &nbsp;
                     {
                       isLoading && (
                           <div className="spinner-border" style={{color: '#fff', fontSize: '10px', width: '20px', height: '20px'}} role="status">

@@ -13,7 +13,7 @@ const ProductRatings = ({ product }) => {
     dispatch(getReviewListByUser(product.id));
   }, []);
 
-  const { reviewList, isLoading } = useSelector((state) => state.ProductReviewReducer);
+  const { reviewList, isLoading } = useSelector((state) => state.productReview);
 
   return (
     <div className="row mt-3 mb-3 no-gutters">

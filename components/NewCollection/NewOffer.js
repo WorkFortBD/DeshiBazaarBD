@@ -5,8 +5,8 @@ import { getNewOfferList } from './_redux/Action/new-offer-action';
 
 const NewOffer = () => {
     const dispatch = useDispatch();
-    const {newOffer, isLoading} = useSelector(state => state.NewOfferReducer);
-    const {isMobile} = useSelector(state => state.GlobalReducer);
+    const {newOffer, isLoading} = useSelector(state => state.offer);
+    const {isMobile} = useSelector(state => state.global);
 
     useEffect(() => {
         if(newOffer.length === 0) {
@@ -28,7 +28,7 @@ const NewOffer = () => {
                                     </>
                                 )
                             }
-    
+
                             {newOffer.length >= 2 && (
                                 <>
                                     <div className="col-lg-3 col-md-4">
@@ -40,7 +40,7 @@ const NewOffer = () => {
                                             </div>
                                         </a>
                                     </div>
-    
+
                                     <div className="col-lg-6 col-md-8">
                                         <a href="">
                                             <div style={{height: '100%', width: '100%'}}>
@@ -50,7 +50,7 @@ const NewOffer = () => {
                                             </div>
                                         </a>
                                     </div>
-    
+
                                     <div className="col-lg-3 col-md-12">
                                     <a href="">
                                         <div className="home-card pointer">

@@ -7,7 +7,7 @@ import { onPageChangeHandler } from '../../helper/paginate-onchange/onchange-han
 
 function BrandListFull() {
     const dispatch = useDispatch();
-    const { ShopList, isLoading, paginate } = useSelector((state) => state.ShopReducer);
+    const { ShopList, isLoading, paginate } = useSelector((state) => state.shop);
 
     useEffect(() => {
         dispatch(getShopList(paginate.currentPage));

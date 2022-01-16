@@ -9,7 +9,7 @@ import { productImageUrl } from '../../services/ProductService';
 import classNames from 'classnames';
 
 const ProductWishList = () => {
-	const { wishList } = useSelector((state) => state.WishlistReducer);
+	const { wishList } = useSelector((state) => state.wishlist);
 	const classes = classNames({
 		'card-body': true,
 		'p-0': wishList.length > 1,

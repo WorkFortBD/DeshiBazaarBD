@@ -1,13 +1,21 @@
-import React from 'react';
+import React, { FC } from 'react';
 import Modal from 'react-bootstrap/Modal';
 
-const SimpleModal = (props) => {
+export interface ISimpleModalProps {
+    show: boolean;
+    handleClose: Function;
+    size?: 'sm' | 'lg' | 'xl';
+}
 
-    const { show, handleClose, size, id } = props;
+const SimpleModal: FC<ISimpleModalProps> = (props) => {
+
+    const { show, handleClose, size } = props;
+    const modalSize = (typeof size !== 'undefined' && size !== null) ? size : 'lg';
+
     return (
         <Modal
             onClose={handleClose}
-            size={size}
+            size={modalSize}
             show={show}
             onHide={handleClose}
             aria-labelledby="contained-modal-title-vcenter"
@@ -24,4 +32,5 @@ const SimpleModal = (props) => {
         </Modal>
     );
 }
+
 export default SimpleModal;

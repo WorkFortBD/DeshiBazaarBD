@@ -8,10 +8,12 @@ import { formatCurrency } from "../../services/currency";
 import axios from "axios";
 import { toggleBackdrop } from "../../_redux/store/action/globalAction";
 import Image from "../master/Image/Image";
+import Link from 'next/link';
 
 const SearchInput = () => {
   const dispatch = useDispatch();
   const router = useRouter();
+  const { pathname } = router;
   
   const [search, setSearch] = useState("");
 
@@ -22,8 +24,8 @@ const SearchInput = () => {
   const [searchType, setSearchType] = useState("product"); // products || shops || brands
   const [searchHistory, setSearchHistory] = useState([]);
 
-  const suggestions = useSelector((state) => state.SearchReducer.products);
-  const loading = useSelector((state) => state.SearchReducer.loading);
+  const suggestions = useSelector((state) => state.productSearch.products);
+  const loading = useSelector((state) => state.productSearch.loading);
   const firstRenderRef = useRef(true);
   const searchRef = useRef();
 
@@ -48,20 +50,23 @@ const SearchInput = () => {
     if(key === "Enter") {
       setIsSearched(true)
       setIsSearchInputTouch(true)
-      const searchHistories = JSON.parse(localStorage.getItem('search-history'))|| [];
-      const currentSearch = {id: new Date().getTime(), name: search}
 
-      searchHistories.push(currentSearch);
+      const searchHistories = updateSearchHistory(search, null)
 
       setSearchHistory(searchHistories);
-      
-      localStorage.setItem('search-history', JSON.stringify(searchHistories))
 
       // searchRef.current.value = ""
 
       // setSearch(""); @todo 
 
-      router.push(`/products?search=${encodeURIComponent(search)}`).then((_) => {
+      router.push({
+        pathname: '/products',
+        query: {
+          search: encodeURIComponent(search),
+          filter: 'paginate_no__40'
+        }
+      })
+      .then((_) => {
         window.scrollTo(0, 0);
       });
     }
@@ -81,6 +86,9 @@ const SearchInput = () => {
     const uriEncodedSlug = encodeURIComponent(searchData.slug);
 
     if (searchData.is_item) {
+      const searchHistories = updateSearchHistory(searchData.search_name, searchData.slug, true)
+      setSearchHistory(searchHistories);
+
       const uri = `/products/${uriEncodedSlug}`;
       router
         .push(uri)
@@ -90,14 +98,14 @@ const SearchInput = () => {
         });
     } else if (searchData.is_category) {
       router
-      .push(`/products?category=${uriEncodedSlug}&name=${encodeURIComponent(searchData.search_name)}`)
+      .push(`/products?category=${uriEncodedSlug}&name=${encodeURIComponent(searchData.search_name)}&filter=paginate_no__40`)
       .then((_) => {
         window.scrollTo(0, 0);
         dispatch(toggleBackdrop());
       });
     } else if (searchData.is_brand) {
       router
-      .push(`/products?brand=${uriEncodedSlug}&name=${encodeURIComponent(searchData.search_name)}`)
+      .push(`/products?brand=${uriEncodedSlug}&name=${encodeURIComponent(searchData.search_name)}&filter=paginate_no__40`)
         .then((_) => {
           window.scrollTo(0, 0);
           dispatch(toggleBackdrop());
@@ -116,12 +124,21 @@ const SearchInput = () => {
     setSearchType(id);
   }
 
+  // useEffect(() => {
+  //   console.log('pathname  from useeffect => ', pathname);
+  // }, [pathname])
+
   useEffect(() => {
     const getSearchHistory = JSON.parse(localStorage.getItem('search-history')) || [];
-  
+
+    if(pathname === '/') {
+      setIsSearched(true)
+      searchRef.current.value = "";
+      setSearch("")
+    }
     setSearchHistory(getSearchHistory)
 
-  }, [JSON.stringify(searchHistory)])
+  }, [JSON.stringify(searchHistory), pathname])
 
   useEffect(() => {
 
@@ -144,9 +161,9 @@ const SearchInput = () => {
   }, [search, searchType])
 
   const inputFocusHandler = () => {
+    setIsSearched(false)
     if(search) return;
     setIsSearchInputTouch(false)
-    setIsSearched(false)
 
     if(searchHistory.length === 0) return;
     
@@ -154,8 +171,12 @@ const SearchInput = () => {
   }
 
   const searchHistoryClickHandler = searchQuery => {
-    setSearch(searchQuery);
     searchRef.current.value = searchQuery || ""
+    
+    setSearch(searchQuery);
+    setIsSearched(true);
+    setIsSuggestionVisible(false);
+    setIsSearchInputTouch(true)
   }
 
   const toggleInputAction = () => {
@@ -170,31 +191,28 @@ const SearchInput = () => {
     }
   }
 
-  const removeSearchItem = (id) => {
-    const cloneSearchHistory = [...searchHistory];
-
-    const updatedSearchHistory = cloneSearchHistory.filter(searchItem => searchItem.id !== id)
-
-    setSearchHistory(updatedSearchHistory);
-
-    localStorage.setItem('search-history', JSON.stringify(updatedSearchHistory));
+  const clearSearchHistory = () => {
+    setSearchHistory([]);
+    setIsSuggestionVisible(false);
+    localStorage.setItem('search-history', JSON.stringify([]));
   }  
 
   return (
     <>
       <input
         ref={el => searchRef.current = el}
-        className="search-input"
+        className="search-input font-14"
         placeholder={translate("Search Products, Brands and Shop")}
         onFocus={inputFocusHandler}
         // onBlur={() => setTimeout(() => {
-        //   setIsSuggestionVisible(false)
-        // }, 200)}
+        //   setIsSearched(true);
+        //   setIsSuggestionVisible(false);
+        // }, 150)}
         onChange={(e) => searchProduct(e)}
         onKeyDown={e => onKeyDownHandler(e.key)}
       />
 
-      <div style={{position: 'absolute', zIndex: '100', right: 'calc(63px + 15px)', top: '16px', fontSize: '12px'}}>
+      <div style={{position: 'absolute', zIndex: '100', right: 'calc(63px + 15px)', top: '17px', fontSize: '12px'}}>
         <span className="color-main pointer" onClick={toggleInputAction} style={{fontWeight: '500'}} >
           {
             (isSuggestionVisible && !search) ? 'close' : (search) && 'remove'
@@ -209,12 +227,31 @@ const SearchInput = () => {
         {
           isSuggestionVisible && !search && !isSearched && (
             <div className="search-suggestion-area search-history modal-scrollbar">
+              <div className="d-flex justify-content-between">
+                <span className="d-inline-block py-2 px-2 font-12 font-weight-500 pointer">Search history</span>
+                <span className="d-inline-block py-2 px-2 font-12 font-weight-500 pointer" onClick={clearSearchHistory}>Clear</span>
+              </div>
               {
                 searchHistory && searchHistory.map((searchItem, index) => (
-                  <div className="py-3 px-2" key={index}>
-                    <div className="d-flex justify-content-between">
-                      <span className="pointer" onClick={() => {searchHistoryClickHandler(searchItem.name); setIsSuggestionVisible(false); setIsSearchInputTouch(true); setTimeout(() => {searchRef.current.focus()}, 50);}}>{searchItem.name}</span>
-                      <span style={{fontSize: '12px', fontWeight: '500'}} className="pointer color-main" onClick={() => removeSearchItem(searchItem.id)}>delete</span>
+                  <div 
+                    className="pointer search-history-item"
+                    key={index}
+                    onClick={() => searchHistoryClickHandler(searchItem.name)}
+                  >
+                    <div>
+                      <Link href={{
+                        pathname: searchItem?.isItem ? `/products/${searchItem?.slug}` : '/products',
+                        query: {
+                          search: !searchItem?.isItem ? searchItem?.name : '',
+                          filter: !searchItem?.isItem ? 'paginate_no__40' : ''
+                        }
+                      }}>
+                        <a className="d-block py-2 px-3 text-decoration-none" style={{color: '#333'}}>
+                          <span className="text-ellipsis">
+                            {searchItem.name}
+                          </span>
+                        </a>
+                      </Link>
                     </div>
                   </div>
                 ))
@@ -232,7 +269,7 @@ const SearchInput = () => {
                     searchByList.map((item, index) => (
                       <span
                         key={index}
-                        className={`search-suggestion-area-search_by-item d-inline-block px-1 py-2 mr-3 ${searchType === item.id ? 'active' : ''}`}
+                        className={`search-suggestion-area-search_by-item d-inline-block p-2 mr-3 ${searchType === item.id ? 'active' : ''}`}
                         onClick={() => searchByListHandler(item.id)} >
                         {item.label}
                       </span>
@@ -264,7 +301,7 @@ const SearchInput = () => {
               onClick={() => searchClick(searchItem)} >
                 <div className="search-suggestion-item__img-box">
                   {/* <img src={searchItem.search_image_url ? searchItem.search_image_url : '/images/default/fallback-image.png'} alt={searchItem.name} /> */}
-                  <Image src={searchItem.search_image_url} alt={searchItem.name} />
+                  <Image src={searchItem.search_image_url} alt={searchItem.name} width={60} height={60} />
                 </div>
 
               <div className="search-suggestion-item__info">
@@ -282,5 +319,15 @@ const SearchInput = () => {
     </>
   );
 };
+
+const updateSearchHistory = (search, slug = null, isItem = false) => {
+  const searchHistories = JSON.parse(localStorage.getItem('search-history'))|| [];
+  const currentSearch = {id: new Date().getTime(), name: search, slug: slug, isItem: isItem}
+
+  searchHistories.unshift(currentSearch);
+  localStorage.setItem('search-history', JSON.stringify(searchHistories))
+
+  return searchHistories;
+}
 
 export default SearchInput;

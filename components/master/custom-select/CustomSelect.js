@@ -1,10 +1,11 @@
 import React from 'react';
 import Select from 'react-select';
 
-export default ({ onChange, options, value, id, name, isDisabled = false }) => {
+export default ({ onChange, options, value, valueId, id, name, isDisabled = false, defaultVal = null }) => {
+    const filterQuery = valueId || value;
 
     const defaultValue = (options, value) => {
-        return options ? options.find(option => option.value === value) : "" ;
+        return options ? options.find(option => option.value == value) : "" ;
     };
 
     return (
@@ -12,7 +13,8 @@ export default ({ onChange, options, value, id, name, isDisabled = false }) => {
             isDisabled={isDisabled}
             name={name}
             id={id}
-            value={defaultValue(options, value)}
+            value={defaultValue(options, filterQuery)}
+            defaultValue={defaultVal}
             onChange={value => {
                 onChange(value)
             }} 

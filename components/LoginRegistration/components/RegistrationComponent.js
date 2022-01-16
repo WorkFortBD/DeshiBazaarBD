@@ -12,6 +12,7 @@ import content from '../../../content.json';
 const LOWERCASEREGEX = /(?=.*[a-z])/;
 const UPPERCASEREGEX = /(?=.*[A-Z])/;
 const NUMERICREGEX   = /(?=.*[0-9])/;
+
 let IS_VALID_OTP     = false;
 
 const RegistrationComponent = () => {
@@ -88,7 +89,15 @@ const RegistrationComponent = () => {
                 // .matches(LOWERCASEREGEX, 'At least one lowercase character required')
                 // .matches(UPPERCASEREGEX, 'At least one uppercase character required')
                 // .matches(NUMERICREGEX, 'At least one numeric value required')
-                .min(8, 'Minimum 8 characters required'),
+                // .matches(NUMERICREGEX, 'At least one numeric value required')
+                .min(8, 'Minimum 8 characters required')
+                .test('password', 'space not allowed', (value) => {
+                    if(value === undefined || value === null) return false;
+
+                    if(/\s/g.test(value)) return false;
+
+                    return true;
+                }),
             password_confirmation: yup.string()
                 .oneOf([yup.ref('password'), null], 'Password confirmation does not match password!')
                 .required('Required')
@@ -217,7 +226,7 @@ const RegistrationComponent = () => {
                                         validationStep === 0 ? (
                                             <>
                                                 <div className="col-12 col-md-6">
-                                                    <div className="pb-3">
+                                                    <div className="pb-3 position-relative">
                                                         <label htmlFor="first_name" className="form-label required">First Name</label>
                                                         <Field className="form-control form-input" type="text" id="first_name" name="first_name" placeholder="John" />
                                                         <ErrorMessage name="first_name" component={ ValidationError } />
@@ -226,7 +235,7 @@ const RegistrationComponent = () => {
 
 
                                                 <div className="col-12 col-md-6">
-                                                    <div className="pb-3">
+                                                    <div className="pb-3 position-relative">
                                                         <label htmlFor="lastName" className="form-label required">Last Name</label>
                                                         <Field className="form-control form-input" type="text" id="last_name" name="last_name" placeholder="Doe" />
                                                         <ErrorMessage name="last_name" component={ ValidationError } />
@@ -234,7 +243,7 @@ const RegistrationComponent = () => {
                                                 </div>
 
                                                 <div className="col-md-12">
-                                                    <div className="pb-3">
+                                                    <div className="pb-3 position-relative">
                                                         <label htmlFor="phone_no" className="form-label required">Phone</label>
                                                         <Field className="form-control form-input" type="text" id="phone_no" name="phone_no" placeholder="01234567899" />
                                                         <ErrorMessage name="phone_no" component={ ValidationError } />
@@ -242,7 +251,7 @@ const RegistrationComponent = () => {
                                                 </div>
 
                                                 <div className="col-md-12">
-                                                    <div className="pb-3">
+                                                    <div className="pb-3 position-relative">
                                                         <label htmlFor="email" className="form-label">Email</label>
                                                         <Field className="form-control form-input" type="text" id="email" name="email" placeholder="e-mail" />
                                                         <ErrorMessage name="email" component={ ValidationError } />
@@ -250,7 +259,7 @@ const RegistrationComponent = () => {
                                                 </div>
 
                                                 <div className="col-md-12">
-                                                    <div className="pb-3">
+                                                    <div className="pb-3 position-relative">
                                                         <div className="d-flex">
                                                             <div className="mr-2" style={{marginTop: '2px'}}>
                                                                 <Field type="checkbox" id="offer" name="offer" className="pointer" />
@@ -266,7 +275,7 @@ const RegistrationComponent = () => {
                                                 </div>
 
                                                 <div className="col-md-12">
-                                                    <div className="pb-3">
+                                                    <div className="pb-3 position-relative">
                                                         <div className="d-flex">
                                                             <div className="mr-2" style={{marginTop: '2px'}}>
                                                                 <Field type="checkbox" id="policy" name="policy" className="pointer" />
@@ -286,7 +295,7 @@ const RegistrationComponent = () => {
                                         ) : (
                                             <>
                                                 <div className="col-8">
-                                                    <div className="pb-3">
+                                                    <div className="pb-3 position-relative">
                                                         <label htmlFor="otp" className="form-label required">Otp</label>
                                                         <Field className="form-control form-input" type="text" id="otp" name="otp" placeholder="123456" />
                                                         <ErrorMessage name="otp" component={ ValidationError } />
@@ -309,7 +318,7 @@ const RegistrationComponent = () => {
                                                 </div>
 
                                                 <div className="col-md-12">
-                                                    <div className="pb-3">
+                                                    <div className="pb-3 position-relative">
                                                         <label htmlFor="password" className="form-label required m-0">Password</label>
                                                         <small className="mb-1 d-block" style={{fontWeight: '500'}}>Password should have at least one numeric, lowercase and uppercase value</small>
                                                         <div className="account_input_group">
@@ -333,7 +342,7 @@ const RegistrationComponent = () => {
                                                 </div>
 
                                                 <div className="col-md-12">
-                                                    <div className="pb-3">
+                                                    <div className="pb-3 position-relative">
                                                         <label htmlFor="password_confirmation" className="form-label required">Confirm password</label>
                                                         <div className="account_input_group">
                                                             <Field className="form-control form-input" type={showConfirmPassword ? "text" : "password" } id="password_confirmation" name="password_confirmation" placeholder="" />
@@ -369,7 +378,7 @@ const RegistrationComponent = () => {
                                             }
                                             <button type="submit" disabled={isLoading ? true : false} className="btn account_btn mt-2">
                                                 {
-                                                    validationStep === 0 ? 'Continue ' : 'Register '
+                                                    validationStep === 0 ? 'Continue ' : 'Sign Up'
                                                 }
                                                 {
                                                     isLoading && (

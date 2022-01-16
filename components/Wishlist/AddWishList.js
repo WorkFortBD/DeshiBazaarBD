@@ -3,8 +3,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import {addOrRemoveWishItem} from './_redux/Action/WishlistAction'
 
 const AddWishList = ({ productId }) => {
-    const { wishListItemsId }         = useSelector(state => state.WishlistReducer);
-    const {isSignedIn} = useSelector(state => state.GlobalReducer);
+    const { wishListItemsId }         = useSelector(state => state.wishlist);
+    const {isSignedIn} = useSelector(state => state.global);
     const dispatch                    = useDispatch();
 
     const isWishItemFound = wishListItemsId[productId.toString()] == productId.toString();

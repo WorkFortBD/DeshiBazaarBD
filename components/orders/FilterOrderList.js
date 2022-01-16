@@ -9,7 +9,7 @@ import SingleOrder from './SingleOrder.js';
 const FilterOrderList = () => {
 
     const dispatch = useDispatch();
-    const { orderList, isLoading, filterOptionList } = useSelector((state) => state.OrderReducer);
+    const { orderList, isLoading, filterOptionList } = useSelector((state) => state.order);
 
     useEffect(() => {
         dispatch(getUserOrderList(5))

@@ -7,7 +7,7 @@ import LoadingPlaceHolder from "../master/skelleton/LoadingPlaceholder";
 const ShopList = () => {
   const router = useRouter();
   const dispatch = useDispatch();
-  const { ShopList, isLoading } = useSelector((state) => state.ShopReducer);
+  const { ShopList, isLoading } = useSelector((state) => state.shop);
 
   const routeHandler = (item) => {
     router
@@ -29,7 +29,7 @@ const ShopList = () => {
             <LoadingPlaceHolder className="col-4 col-md-2 col-lg-2" count={18} height={90} />
           )
         }
-        
+
         {ShopList.length > 0 &&
           ShopList.slice(0, 18).map((item, index) => (
             <div className="col-4 col-md-2 col-lg-2" key={index}>

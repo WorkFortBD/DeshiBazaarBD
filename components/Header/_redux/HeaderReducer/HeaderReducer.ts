@@ -1,11 +1,14 @@
 import * as Types from "../Type/Types";
 
+export interface IHeaderReducer {
+  isLoading: boolean;
+}
+
 const initialState = {
   menuList: [],
-  isLoading: false,
-  error: null,
 };
-function HeaderReducer(state = initialState, { type, payload }) {
+
+export default function HeaderReducer(state = initialState, { type, payload }) {
   switch (type) {
     case Types.INIT_MENU_LIST:
       return {
@@ -17,18 +20,15 @@ function HeaderReducer(state = initialState, { type, payload }) {
       return {
         ...state,
         ...payload,
-        isLoading: false,
       };
 
     case Types.FETCH_MENU_LIST_FAILED:
       return {
         ...state,
         ...payload,
-        isLoading: false,
       };
 
     default:
       return state;
   }
 }
-export default HeaderReducer;

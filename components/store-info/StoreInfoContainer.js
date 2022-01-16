@@ -2,11 +2,11 @@ import React from 'react'
 import {Tab, Tabs} from 'react-bootstrap';
 import {useSelector} from 'react-redux'
 import CategoryWishProductContainer from '../CategoryWishProductList/CategoryWishProductContainer';
-import StoreProductList from './StoreProductList';
+// import StoreProductList from './StoreProductList';
 import StoreProfile from './StoreProfile';
 
 function StoreInfoContainer() {
-    const { storeInfo } = useSelector(state => state.StoreInfoReducer);
+    const { storeInfo } = useSelector(state => state.storeInfo);
     return (
         <div className="container">
             <div className="store-info-container">

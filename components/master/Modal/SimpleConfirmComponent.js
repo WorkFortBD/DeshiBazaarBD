@@ -1,6 +1,5 @@
 import React from 'react';
 import { Spinner } from 'react-bootstrap';
-import LoadingSpinner from '../LoadingSpinner/LoadingSpinner';
 import SimpleBtn from '../SimpleBtn/SimpleBtn';
 
 /**
@@ -9,10 +8,10 @@ import SimpleBtn from '../SimpleBtn/SimpleBtn';
  * @param closeModal, //function for close modal
  * @param isLoading, // boolean true or false
  * @param text //string
- * @param details nullable 
+ * @param details nullable
  * @param confirmBtnVariant //string background color for confirm button
  * @param closeBtnVariant //string background color for close button
- * 
+ *
  * @returns SimpleConfirmComponent
  */
 

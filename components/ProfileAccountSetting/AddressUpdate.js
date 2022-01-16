@@ -2,36 +2,39 @@ import React, { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import { handleChangeBillingAddressInput, addAddress, handleEmptyDispatch, getLocationData } from './_redux/Action/ProfileAccountSettingAction';
-import ErrorMessage from '../master/ErrorMessage/ErrorMessage'
+import ErrorMessage from '../master/message/ErrorMessage'
 import { RHFInput } from 'react-hook-form-input';
 import Select from 'react-select';
 import { Spinner } from 'react-bootstrap'
+import { handleShippingCost } from '../orders/_redux/action/OrderAction';
 
 const AddressUpdate = (props) => {
     const dispatch = useDispatch();
-    const { countryList, divisionList, cityList, areaList, isSubmitting, selectedAddress } = useSelector((state) => state.ProfileAccountSettingReducer);
-    const {userData} = useSelector(state => state.UserDataReducer);
-    const { register, handleSubmit, errors, setValue } = useForm();
+    const { countryList, divisionList, cityList, areaList, isSubmitting, selectedAddress } = useSelector((state) => state.userProfile);
+    const {userData} = useSelector(state => state.user);
+    const { register, errors, setValue } = useForm();
 
-    //handle change input 
+    //handle change input
     const handleChangeTextInput = (name, value) => {
         dispatch(handleChangeBillingAddressInput(name, value))
     }
 
     const submitUpdatedAddressHandler = (e) => {
         e.preventDefault();
-        dispatch(addAddress(selectedAddress, props.type, props.closeModal, userData.id))
+        dispatch(addAddress(selectedAddress, props.type, props.closeModal, userData.id));
+
+        // Dispatch to calculate shipping cost again.
+        dispatch(handleShippingCost([]));
     }
 
     useEffect(() => {
         if (selectedAddress.country && selectedAddress.city) {
-            dispatch(getLocationData('cities', 'division', selectedAddress.country));
+            dispatch(getLocationData('cities', 'division', selectedAddress.division_id));
             dispatch(getLocationData('areas', 'city', selectedAddress.city_id));
         }
         if (props.type === "new_address") {
             dispatch(handleEmptyDispatch("new_address"))
         }
-
     }, [])
 
 
@@ -83,7 +86,7 @@ const AddressUpdate = (props) => {
                             />
                             {
                                 errors.name && errors.name.type === 'required' && (
-                                    <ErrorMessage errorText="Name can't be blank!" />
+                                    <ErrorMessage message="Name can't be blank!" />
                                 )
                             }
 
@@ -106,7 +109,7 @@ const AddressUpdate = (props) => {
                             />
                             {
                                 errors.phone_no && errors.phone_no.type === 'required' && (
-                                    <ErrorMessage errorText="Phone number can't be blank!" />
+                                    <ErrorMessage message="Phone number can't be blank!" />
                                 )
                             }
 
@@ -131,7 +134,7 @@ const AddressUpdate = (props) => {
                                 />
                                 {
                                     errors.country_id && errors.country_id.type === 'required' && (
-                                        <ErrorMessage errorText="Type can't be blank!" />
+                                        <ErrorMessage message="Type can't be blank!" />
                                     )
                                 }
 
@@ -162,7 +165,7 @@ const AddressUpdate = (props) => {
                             />
                             {
                                 errors.country_id && errors.country_id.type === 'required' && (
-                                    <ErrorMessage errorText="Country can't be blank!" />
+                                    <ErrorMessage message="Country can't be blank!" />
                                 )
                             }
                         </div>
@@ -176,7 +179,7 @@ const AddressUpdate = (props) => {
                                 rules={{ required: true }}
                                 name="division_id"
                                 register={register}
-                                value={selectedAddress.selectedCountry}
+                                value={selectedAddress.selectedDivision}
                                 onChange={(option) => {
                                     handleChangeTextInput("division", option.label);
                                     handleChangeTextInput("division_id", option.value);
@@ -186,7 +189,7 @@ const AddressUpdate = (props) => {
                             />
                             {
                                 errors.division_id && errors.division_id.type === 'required' && (
-                                    <ErrorMessage errorText="Division can't be blank!" />
+                                    <ErrorMessage message="Division can't be blank!" />
                                 )
                             }
                         </div>
@@ -210,7 +213,7 @@ const AddressUpdate = (props) => {
                             />
                             {
                                 errors.city_id && errors.city_id.type === 'required' && (
-                                    <ErrorMessage errorText="City can't be blank!" />
+                                    <ErrorMessage message="City can't be blank!" />
                                 )
                             }
                         </div>
@@ -233,7 +236,7 @@ const AddressUpdate = (props) => {
                             />
                             {
                                 errors.area_id && errors.area_id.type === 'required' && (
-                                    <ErrorMessage errorText="Area can't be blank!" />
+                                    <ErrorMessage message="Area can't be blank!" />
                                 )
                             }
                         </div>
@@ -257,7 +260,7 @@ const AddressUpdate = (props) => {
                             </textarea>
                             {
                                 errors.street1 && errors.street1.type === 'required' && (
-                                    <ErrorMessage errorText="Street-1 can't be blank!" />
+                                    <ErrorMessage message="Street-1 can't be blank!" />
                                 )
                             }
                         </div>
@@ -281,7 +284,7 @@ const AddressUpdate = (props) => {
                             </textarea>
                             {
                                 errors.street2 && errors.street2.type === 'required' && (
-                                    <ErrorMessage errorText="Street-2 can't be blank!" />
+                                    <ErrorMessage message="Street-2 can't be blank!" />
                                 )
                             }
                         </div>

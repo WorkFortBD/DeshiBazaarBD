@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getAddress, getDefaultAddress, getSingleAddress } from '../ProfileAccountSetting/_redux/Action/ProfileAccountSettingAction';
-import LoadingSpinner from '../master/LoadingSpinner/LoadingSpinner';
-import SimpleModal from '../master/Modal/SimpleModal';
+import LoadingSpinner from '../master/loading/LoadingSpinner';
+import SimpleModal from '../master/modal/SimpleModal';
 import AddressUpdate from '../ProfileAccountSetting/AddressUpdate';
 import WarningMessage from '../master/warningMessage/WarningMessage';
 import SimpleBtn from '../master/SimpleBtn/SimpleBtn';
@@ -11,10 +11,10 @@ import content from '../../content.json';
 const ShippingInfo = () => {
 
     const dispatch = useDispatch();
-    const { userData } = useSelector((state) => state.UserDataReducer);
+    const { userData } = useSelector((state) => state.user);
     const [show, setShow] = useState(false);
 
-    const { isLoading, defaultBillingAddress } = useSelector((state) => state.ProfileAccountSettingReducer);
+    const { isLoading, defaultBillingAddress } = useSelector((state) => state.userProfile);
 
     const toggleShowHandler = () => {
         setShow(preState => !preState);

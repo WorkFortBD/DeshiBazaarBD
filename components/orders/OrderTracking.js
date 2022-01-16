@@ -6,7 +6,7 @@ import { getTrackingTimelineDate } from './_redux/action/OrderAction';
 const OrderTracking = () => {
 
     const dispatch = useDispatch();
-    const { trackingTimelineList, isLoading } = useSelector((state) => state.OrderReducer);
+    const { trackingTimelineList, isLoading } = useSelector((state) => state.order);
 
     useEffect(() => {
         dispatch(getTrackingTimelineDate())

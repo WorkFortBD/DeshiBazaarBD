@@ -6,7 +6,7 @@ import ProductReviewCreate from './ProductReviewCreate';
 import PriceCalculation from '../products/partials/PriceCalculation';
 import SimpleBtn from '../master/SimpleBtn/SimpleBtn';
 import AddWishList from '../Wishlist/AddWishList';
-import SimpleModal from '../master/Modal/SimpleModal';
+import SimpleModal from '../master/modal/SimpleModal';
 import WarningMessage from '../master/warningMessage/WarningMessage';
 import Link from 'next/link';
 
@@ -16,7 +16,7 @@ const ProductListForReview = () => {
     const [show, setShow] = useState(false);
     const [ReviewItem, setReviewItem] = useState(null);
 
-    const { isLoading, itemList } = useSelector((state) => state.ProductReviewReducer);
+    const { isLoading, itemList } = useSelector((state) => state.productReview);
 
     useEffect(() => {
         dispatch(getItemListByUser());

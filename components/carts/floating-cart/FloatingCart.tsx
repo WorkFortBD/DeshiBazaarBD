@@ -2,20 +2,20 @@ import React, { useEffect, useState } from "react";
 import router from "next/router";
 import { useDispatch, useSelector } from "react-redux";
 
-import { formatCurrency, activeCurrency } from "../../../services/currency";
+import { formatCurrency } from "../../../services/currency";
 import Modal from "../../master/Modal/Modal";
 import SimpleBtn from "../../master/SimpleBtn/SimpleBtn";
 import FloatingCartProduct from "./FloatingCartProduct";
 
 import { toggleFloatingCart } from "../../../_redux/store/action/globalAction";
 import { getCartsAction, removeAllCartItem } from "../_redux/action/CartAction";
+import { IRootReducer } from "../../../_redux/RootReducer";
 
 function FloatingCart() {
   const dispatch = useDispatch();
-  const { floatingCartVisible } = useSelector((state) => state.GlobalReducer);
-  const { carts, totalQuantity, totalPrice } = useSelector(
-    (state) => state.CartReducer
-  );
+  const { floatingCartVisible } = useSelector((state: IRootReducer) => state.global);
+  const { carts, totalQuantity, totalPrice } = useSelector((state: IRootReducer) => state.cart); // TODO: suggestion will come after interfacing at reducer
+  // const { shippingCost } = useSelector((state: IRootReducer) => state.order);
 
   const [show, setShow] = useState(false);
 
@@ -82,23 +82,23 @@ function FloatingCart() {
     floatingCart = (
       <>
         <Modal closeModalHandler={handleClose} visible={show}>
-            <p className="remove_title">Cart item</p>
-            <div className="mb-3">All products will be removed</div>
-            <div className="d-flex justify-content-end">
-              <button
-                className="custom_secondary_btn custom-button-component"
-                onClick={handleClose}
-              >
-                Cancel
-              </button>
-              <button
-                className="custom-button-component ml-3"
-                style={{ padding: "5px 10px" }}
-                onClick={clearAllItem}
-              >
-                Remove all
-              </button>
-            </div>
+          <p className="remove_title">Cart item</p>
+          <div className="mb-3">All products will be removed</div>
+          <div className="d-flex justify-content-end">
+            <button
+              className="custom_secondary_btn custom-button-component"
+              onClick={handleClose}
+            >
+              Cancel
+            </button>
+            <button
+              className="custom-button-component ml-3"
+              style={{ padding: "5px 10px" }}
+              onClick={clearAllItem}
+            >
+              Remove all
+            </button>
+          </div>
         </Modal>
         <div className="floating-cart modal-scrollbar">
           <div className="floating-cart__header">
@@ -114,7 +114,7 @@ function FloatingCart() {
           {+totalQuantity <= 0 && (
             <div className="floating-cart__not-found">
               <div className="floating-cart__not-found-img-box d-flex justify-content-center">
-                <img src="/images/db-empty-cart.png" alt="empty cart" />
+                <img width={240} height={160} src="/images/db-empty-cart.png" alt="empty cart" />
               </div>
               <p>Oop!!! Your cart is empty ! Start shopping</p>
             </div>
@@ -122,12 +122,18 @@ function FloatingCart() {
 
           {+totalQuantity > 0 && (
             <>
-              <p
-                onClick={handleClose}
-                style={{ padding: "0rem 1rem", cursor: "pointer" }}
-              >
-                Clear all
-              </p>
+              <div className="mb-2 d-flex justify-content-between" style={{ fontSize: '14px' }}>
+                <span
+                  className="d-inline-block"
+                  onClick={handleClose}
+                  style={{ padding: "0rem 1rem", cursor: "pointer" }}
+                >
+                  Clear all
+                </span>
+                <span className="d-inline-block" style={{ padding: "0 1rem", fontWeight: 500, color: 'var(--color-primary)' }}>
+                  {formatCurrency(totalPrice)}
+                </span>
+              </div>
               <div className="floating-cart__products">
                 {carts.length > 0 &&
                   carts.map((item, index) => (
@@ -137,7 +143,7 @@ function FloatingCart() {
                   ))}
               </div>
 
-              <div className="floating-cart__payment-info">
+              {/* <div className="floating-cart__payment-info">
                 <div className="floating-cart__payment-details">
                   <span>Sub Total</span>
                   <span>
@@ -148,7 +154,7 @@ function FloatingCart() {
                 <div className="floating-cart__payment-details">
                   <span>Delivery Fee</span>
                   <span>
-                    {formatCurrency(totalPrice > 0 ? 60 : 0)}{" "}
+                    {formatCurrency(shippingCost)}{" "}
                     {activeCurrency("code")}
                   </span>
                 </div>
@@ -161,7 +167,7 @@ function FloatingCart() {
                     </span>
                   </div>
                 )}
-              </div>
+              </div> */}
 
               <div className="floating-cart__actions">
                 <div onClick={() => redirectToCart()}>

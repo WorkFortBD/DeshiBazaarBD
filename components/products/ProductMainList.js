@@ -82,7 +82,7 @@ const ProductMainList = (props) => {
     }, []);
 
 
-    const { isProductListloading } = useSelector(state => state.ProductReducer);
+    const { isProductListloading } = useSelector(state => state.product);
 
     useEffect(() => {
     }, [isProductListloading])

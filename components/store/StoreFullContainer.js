@@ -11,7 +11,7 @@ const StoreListFull = dynamic(() => import('./StoreListFull'), {ssr: false})
 
 function StoreFullContainer() {
     const dispatch = useDispatch();
-    const { selectedLocation, paginate } = useSelector(state => state.StoreReducer)
+    const { selectedLocation, paginate } = useSelector(state => state.store)
 
     useEffect(() => {
         dispatch(getFilteredStoreList(selectedLocation, paginate.currentPage))
