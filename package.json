@@ -31,7 +31,7 @@
     "framer-motion": "^4.1.17",
     "include-media": "^1.4.10",
     "jwt-decode": "^2.2.0",
-    "next": "^11.0.1",
+    "next": "^13.0.2",
     "next-auth": "^3.4.2",
     "next-redux-wrapper": "^6.0.2",
     "nprogress": "^0.2.0",
