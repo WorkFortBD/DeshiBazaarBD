@@ -42,8 +42,10 @@ const HomeBannerCarousel = ({slider}) => {
 
 function parseBgColorFromTitle(slider) {
   const bgColors = slider?.title.split('---')[1]?.split?.(',');
-  const bgOne = bgColors[0] ?? '#ffff';
-  const bgTwo = bgColors[1] ?? '#ffff';
+  // const bgOne = bgColors[0] ?? '#ffff';
+  const bgOne = '#ffff';
+  const bgTwo =  '#ffff';
+  // const bgTwo = bgColors[1] ?? '#ffff';
 
   return `linear-gradient(90deg, ${bgOne} 0%, ${bgTwo} 100%)`;
 }
