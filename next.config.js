@@ -11,7 +11,7 @@
 
 module.exports = {
   images: {
-    domains: ['deshibazaarbucket.s3.ap-southeast-1.amazonaws.com', 'deshibazaarbd.com', 'api.deshibazaarbd.com','127.0.0.1'],
+    domains: ['ecom-api.devmative.com', 'deshibazar.netlify.app', 'ecom-api.devmative.com','127.0.0.1'],
   },
   webpack5: true,
   webpack(config) {
