@@ -18,7 +18,7 @@
     "@reduxjs/toolkit": "^1.7.1",
     "@stripe/react-stripe-js": "^1.4.1",
     "@stripe/stripe-js": "^1.15.0",
-    "axios": "^0.21.2",
+    "axios": "^1.6.0",
     "bootstrap": "^4.6.0",
     "classnames": "^2.3.1",
     "css-loader": "^5.2.6",
